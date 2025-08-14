@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Filter } from 'bad-words';
 import { Msg } from '../net/protocol';
-import { sessionStore } from '../store/session';
+import { sessionStore } from '../store/tableSession';
 import { setupPeerConnection } from '../net/webrtc';
 import { initVoicePTT, disposeVoicePTT, setMuted } from './VoicePTT';
 
