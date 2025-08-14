@@ -61,6 +61,7 @@ export function startSignalingServer({ port = 8080 } = {}) {
               roomId: msg.roomId,
               pin: msg.pin,
               players: {},
+              seats: {},
               seq: 0,
               states: [],
             };
