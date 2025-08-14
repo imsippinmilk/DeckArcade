@@ -1,0 +1,27 @@
+# State Inventory
+
+This file catalogs all known state identifiers across the codebase. Before adding a new state, verify it is not listed.
+
+## Used States
+
+src/games/blackjack/rules.ts
+- stage: 'player' (line 65)
+- stage: 'dealer' (line 65)
+- stage: 'finished' (line 65)
+- events: 'reshuffle' (line 146)
+- Outcome.result: 'win' (line 54)
+- Outcome.result: 'lose' (line 54)
+- Outcome.result: 'push' (line 54)
+- Outcome.result: 'blackjack' (line 54)
+- Outcome.result: 'surrender' (line 54)
+
+src/store/moneyPool.ts
+- SettlementOutcome.result: 'win' (line 18)
+- SettlementOutcome.result: 'lose' (line 18)
+- SettlementOutcome.result: 'push' (line 18)
+- LedgerEntry.reason: 'buyIn' (lines 50-53)
+- LedgerEntry.reason: 'bet' (line 71)
+- LedgerEntry.reason: 'settle' (line 98)
+
+## Unused States
+- None
