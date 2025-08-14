@@ -24,4 +24,14 @@ export function getGame(slug: string): GameRegistration | undefined {
   return registry.get(slug);
 }
 
+export function listGames(): GameRegistration[] {
+  return Array.from(registry.values());
+}
+
+export const gameAPI = {
+  registerGame,
+  getGame,
+  listGames,
+};
+
 export type Game = GameRegistration;
