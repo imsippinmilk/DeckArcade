@@ -1,6 +1,8 @@
 import type { JSX } from 'react';
 
-// Existing game registration used by rules engine and tests
+// ---------------------------------------------------------------------------
+// Rules engine registry used by tests and game logic
+
 export interface GameRegistration<
   State = any,
   Action = any,
@@ -17,8 +19,6 @@ export interface GameRegistration<
   };
 }
 
-// Registry backing the rules engine. Kept for backward compatibility with
-// existing tests and modules that rely on slug-based lookups.
 const rulesRegistry = new Map<string, GameRegistration>();
 
 export function registerGame(game: GameRegistration): void {
@@ -30,28 +30,20 @@ export function getGame(slug: string): GameRegistration | undefined {
 }
 
 export function listGames(): GameRegistration[] {
-  return Array.from(registry.values());
+  return Array.from(rulesRegistry.values());
 }
-
-export const gameAPI = {
-  registerGame,
-  getGame,
-  listGames,
-};
 
 export type Game = GameRegistration;
 
 // ---------------------------------------------------------------------------
-// Minimal front-end game contract and registry. Games may opt in to this API
-// to describe their UI and lobby characteristics without pulling in rules
-// logic. This mirrors the snippet provided in the task instructions.
+// Minimal front-end game contract and registry
 
 export type GameId = string;
 
 export type FrontAPI = {
   animations: typeof import('./animations');
-  send: (event: string, payload?: any) => void; // to engine / network
-  requestState: () => any; // pull latest game state
+  send: (event: string, payload?: any) => void;
+  requestState: () => any;
 };
 
 export type GameMeta = {
@@ -64,16 +56,16 @@ export type GameMeta = {
 };
 
 type GameRegistry = Map<GameId, GameMeta>;
-const registry: GameRegistry = new Map();
+const uiRegistry: GameRegistry = new Map();
 
 export const gameAPI = {
   registerGame(meta: GameMeta) {
-    registry.set(meta.id, meta);
+    uiRegistry.set(meta.id, meta);
   },
   listGames() {
-    return Array.from(registry.values());
+    return Array.from(uiRegistry.values());
   },
   getGame(id: GameId) {
-    return registry.get(id);
+    return uiRegistry.get(id);
   },
 };

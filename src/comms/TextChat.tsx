@@ -1,28 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Filter } from 'bad-words';
-import { Msg } from '../net/protocol';
-import { sessionStore } from '../store/tableSession';
-import { setupPeerConnection } from '../net/webrtc';
-import { initVoicePTT, disposeVoicePTT, setMuted } from './VoicePTT';
-
-const EMOTES: Record<string, string> = { ':smile:': '🙂' };
-const ROOM_ID = 'test-room';
-const MAX_HISTORY = 100;
-
-function applyEmotes(text: string): string {
-  return Object.entries(EMOTES).reduce(
-    (acc, [code, emoji]) => acc.split(code).join(emoji),
-    text,
-  );
-}
-
-const TextChat: React.FC = () => {
-  const [messages, setMessages] = useState<{ message: string; ts: number }[]>(
-    [],
-  );
-
 import React, { useState } from 'react';
+
 type Message = { id: string; user: string; text: string; ts: number };
+
 export const TextChat: React.FC<{
   onSend?: (text: string) => void;
   messages?: Message[];

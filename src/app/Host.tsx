@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
@@ -18,7 +17,7 @@ export const Host: React.FC = () => {
         <label>
           Lobby Name
           <br />
-          <input placeholder="e.g., Friday Night" />
+          <input placeholder="e.g., Friday Night" aria-label="Lobby Name" />
         </label>
         <div style={{ marginTop: '.75rem', display: 'flex', gap: '.5rem' }}>
           <Button variant="primary" onClick={() => setOpen(false)}>
@@ -30,15 +29,3 @@ export const Host: React.FC = () => {
     </main>
   );
 };
-
-import React from 'react';
-
-export function Host() {
-  return (
-    <div className="container">
-      <h2>Host a Game</h2>
-      <p>Hosting interface coming soon.</p>
-    </div>
-  );
-}
-
