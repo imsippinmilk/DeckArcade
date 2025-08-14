@@ -4,8 +4,7 @@ import { ToastProvider, useToast } from './Toaster';
 type Theme = 'light' | 'dark';
 
 function applyTheme(theme: Theme) {
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(theme);
+  document.documentElement.setAttribute('data-theme', theme);
 }
 
 function AppContent() {

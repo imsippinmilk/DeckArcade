@@ -9,11 +9,11 @@
       (function() {
         const stored = localStorage.getItem('theme');
         if (stored === 'light' || stored === 'dark') {
-          document.documentElement.classList.add(stored);
+          document.documentElement.setAttribute('data-theme', stored);
         } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
         } else {
-          document.documentElement.classList.add('light');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
     </script>

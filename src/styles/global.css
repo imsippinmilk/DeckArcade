@@ -1,0 +1,145 @@
+/* Global reset + theme variables + keyframes for your animation preset names. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Plus+Jakarta+Sans:wght@600;800&display=swap');
+
+:root {
+  color-scheme: light dark;
+  --bg: #ffffff;
+  --surface: #f7f9fb;
+  --surfaceAlt: #f0f3f6;
+  --text: #0b0f12;
+  --muted: #4a5a66;
+  --accentPrimary: #17bebb;
+  --accentSecondary: #e94e77;
+  --accentTertiary: #ffc145;
+  --success: #3ddc84;
+  --warning: #ffb300;
+  --danger: #ff5a5a;
+
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+
+  --shadow-card: 0 0.75rem 1.75rem rgba(0,0,0,0.1);
+
+  --font-display: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Arial;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", Arial;
+
+  --dur-xfast: 90ms;
+  --dur-fast: 150ms;
+  --dur-base: 220ms;
+  --dur-slow: 320ms;
+  --dur-xslow: 500ms;
+
+  --ease-standard: cubic-bezier(0.2, 0.0, 0.0, 1);
+  --ease-emphasized: cubic-bezier(0.2, 0.0, 0, 1);
+  --ease-decelerate: cubic-bezier(0, 0, 0.2, 1);
+  --ease-accelerate: cubic-bezier(0.4, 0.0, 1, 1);
+  --ease-springy: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0a0e10;
+  --surface: #121719;
+  --surfaceAlt: #0f1416;
+  --text: #eef2f5;
+  --muted: #90a4ae;
+  --shadow-card: 0 0.75rem 1.75rem rgba(0,0,0,0.35);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* Cards & chips & UI motions: names match your README presets */
+@keyframes card-deal { from { transform: translateX(-18vw) rotate(-5deg); opacity: 0; } to { transform: translateX(0) rotate(0); opacity: 1; } }
+@keyframes card-flip-3d { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+@keyframes chip-slide { from { transform: translateX(12vw); opacity: 0.6; } to { transform: translateX(0); opacity: 1; } }
+@keyframes stack-bounce { 0% { transform: translateY(0); } 50% { transform: translateY(-4px); } 100% { transform: translateY(0); } }
+@keyframes confetti-pop { 0%{ transform: scale(0.8); opacity:0;} 60%{ transform: scale(1.04);} 100%{ transform: scale(1); opacity:1;} }
+@keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(23,190,187,0.0);} 50% { box-shadow: 0 0 0 6px rgba(23,190,187,0.18);} }
+@keyframes shake { 0%,100%{ transform: translateX(0);} 25%{ transform: translateX(-4px);} 75%{ transform: translateX(4px);} }
+@keyframes tick { from { opacity: 0.7; } to { opacity: 1; } }
+@keyframes fade-scale-in { from { opacity: 0; transform: scale(.96);} to { opacity: 1; transform: scale(1);} }
+@keyframes fade-scale-out { from { opacity: 1; transform: scale(1);} to { opacity: 0; transform: scale(.96);} }
+@keyframes slide-in-up { from { transform: translateY(8px); opacity:0;} to { transform: translateY(0); opacity:1;} }
+@keyframes slide-out-down { from { transform: translateY(0); opacity:1;} to { transform: translateY(8px); opacity:0;} }
+@keyframes glow { 0%,100%{ box-shadow: 0 0 0 0 rgba(23,190,187,0.0);} 50%{ box-shadow: 0 0 0 8px rgba(23,190,187,0.25);} }
+
+/* Utility */
+.container { max-width: 82.5rem; margin: 0 auto; padding: 0 1rem; }
+.card { background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+
+/* Additional component styles */
+button.theme-toggle {
+  background-color: var(--accentPrimary);
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.table {
+  background-color: var(--surface);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--accentPrimary);
+  outline-offset: 2px;
+}
+
+.spinner {
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  width: 1em;
+  height: 1em;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.toaster {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  background-color: var(--accentPrimary);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.toast.success { background-color: var(--success); }
+.toast.error { background-color: var(--danger); }
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
