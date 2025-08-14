@@ -7,10 +7,10 @@ describe('game registry', () => {
       slug: 'test-game',
       meta: {},
       createInitialState: () => ({}),
-      applyAction: (state) => state,
-      getPlayerView: (state) => state,
+      applyAction: (state: unknown) => state,
+      getPlayerView: (state: unknown) => state,
       getNextActions: () => [],
-      rules: { validate: () => true }
+      rules: { validate: () => true },
     };
     registerGame(game);
     expect(getGame('test-game')).toBe(game);
@@ -21,14 +21,14 @@ describe('game registry', () => {
       slug: 'shared-slug',
       meta: { version: 1 },
       createInitialState: () => ({}),
-      applyAction: (state) => state,
-      getPlayerView: (state) => state,
+      applyAction: (state: unknown) => state,
+      getPlayerView: (state: unknown) => state,
       getNextActions: () => [],
-      rules: { validate: () => true }
+      rules: { validate: () => true },
     };
     const second: GameRegistration = {
       ...first,
-      meta: { version: 2 }
+      meta: { version: 2 },
     };
     registerGame(first);
     registerGame(second);
