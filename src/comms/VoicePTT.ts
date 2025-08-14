@@ -138,3 +138,18 @@ export function disposeVoicePTT() {
   pc = null;
   indicator?.classList.remove('speaking');
 }
+
+// Simple push-to-talk mic capture. Wire to your signaling later.
+export class VoicePTT {
+  private stream?: MediaStream;
+
+  async press(): Promise<MediaStream | undefined> {
+    if (!this.stream)
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    return this.stream;
+  }
+
+  release() {
+    /* mute/stop as needed or push to network */
+  }
+}

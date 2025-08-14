@@ -1,0 +1,16 @@
+@import '../theme.css';
+
+header {
+  padding: 1rem;
+  background: var(--background-color);
+}
+
+header nav a {
+  margin-right: 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.container {
+  padding: 1rem;
+}
