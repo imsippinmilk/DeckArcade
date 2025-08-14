@@ -42,10 +42,11 @@ const TextChat: React.FC = () => {
       const msg: Msg = JSON.parse(ev.data);
       switch (msg.type) {
         case 'HELLO':
+          if (!msg.clientId) break;
           playerIdRef.current = msg.clientId;
           (window as any).__chatId = msg.clientId;
-          sessionStore.join(ROOM_ID, msg.clientId);
-          ws.send(JSON.stringify({ type: 'JOIN', roomId: ROOM_ID }));
+          const joinMsg = sessionStore.join(ROOM_ID, msg.clientId);
+          ws.send(joinMsg);
           break;
         case 'CHAT':
           addMessage({
@@ -66,6 +67,8 @@ const TextChat: React.FC = () => {
     };
 
     return () => {
+      const leaveMsg = sessionStore.leave();
+      if (leaveMsg) ws.send(leaveMsg);
       ws.close();
     };
   }, []);
