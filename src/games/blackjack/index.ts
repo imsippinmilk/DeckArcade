@@ -22,12 +22,6 @@ registerGame({
   },
 });
 
-export {
-  createInitialState,
-  applyAction,
-  getNextActions,
-  Hand,
-  GameState,
-  BlackjackConfig,
-} from './rules';
+export { createInitialState, applyAction, getNextActions } from './rules';
+export type { Hand, GameState, BlackjackConfig } from './rules';
 export { placeBet, settleHand, getBalance } from './betting';
