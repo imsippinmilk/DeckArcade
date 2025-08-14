@@ -2,10 +2,11 @@ import { animationTokens } from './tokens';
 
 /**
  * Default animation presets. Each preset defines a keyframe name,
- * duration and easing function. Distances are specified as CSS
- * length values and should be interpreted relative to the current
- * layout. These presets correspond to the definitions in the
- * specification and can be passed to the Animations.play API.
+ * duration and easing function. A `distance` value may also be
+ * provided for translations; when present it is a CSS length
+ * interpreted relative to the current layout. These presets correspond
+ * to the definitions in the specification and can be passed to the
+ * Animations.play API.
  */
 export const presets = {
   dealCard: {
