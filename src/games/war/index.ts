@@ -1,5 +1,11 @@
 import { registerGame } from '../../gameAPI';
-import { createInitialState, applyAction, getPlayerView } from './rules';
+import {
+  createInitialState,
+  applyAction,
+  getPlayerView,
+  getNextActions,
+  validateAction,
+} from './rules';
 
 registerGame({
   slug: 'war',
@@ -7,10 +13,15 @@ registerGame({
   createInitialState,
   applyAction,
   getPlayerView,
-  getNextActions: () => ['draw'],
+  getNextActions,
   rules: {
-    validate: (_state, action) => action === 'draw',
+    validate: validateAction,
   },
 });
-
-export { createInitialState, applyAction, getPlayerView };
+export {
+  createInitialState,
+  applyAction,
+  getPlayerView,
+  getNextActions,
+  validateAction,
+};
