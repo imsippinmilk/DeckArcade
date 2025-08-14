@@ -7,6 +7,19 @@ export interface GameRegistration {
   getNextActions: (state: any, stage?: string) => string[];
   rules: {
     validate: (state: any, action: any) => boolean;
+export interface GameRegistration<
+  State = any,
+  Action = any,
+  PlayerId = string,
+> {
+  slug: string;
+  meta: Record<string, any>;
+  createInitialState: (...args: any[]) => State;
+  applyAction: (state: State, action: Action, playerId?: PlayerId) => void;
+  getPlayerView: (state: State, playerId: PlayerId) => unknown;
+  getNextActions: (state: State, playerId: PlayerId) => Action[];
+  rules: {
+    validate: (state: State, action: Action, playerId?: PlayerId) => boolean;
   };
 }
 

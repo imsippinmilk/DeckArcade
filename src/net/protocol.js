@@ -33,6 +33,9 @@ export const MsgSchema = z.discriminatedUnion('type', [
     playerId: z.string(),
     ready: z.boolean(),
   }),
+  z.object({ type: z.literal('PAUSE'), roomId: z.string().optional() }),
+  z.object({ type: z.literal('RESUME'), roomId: z.string().optional() }),
+  z.object({ type: z.literal('END_GAME'), roomId: z.string().optional() }),
   z.object({
     type: z.literal('INTENT'),
     playerId: z.string(),
@@ -63,6 +66,13 @@ export const MsgSchema = z.discriminatedUnion('type', [
     playerId: z.string().optional(),
     message: z.string(),
     ts: z.number().optional(),
+  }),
+  // WebRTC signalling for voice chat
+  z.object({ type: z.literal('RTC_OFFER'), sdp: z.string(), from: z.string() }),
+  z.object({
+    type: z.literal('RTC_ANSWER'),
+    sdp: z.string(),
+    from: z.string(),
   }),
 ]);
 
