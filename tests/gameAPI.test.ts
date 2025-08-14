@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { registerGame, getGame, type GameRegistration } from 'src/gameAPI';
+import {
+  registerGame,
+  getGame,
+  gameAPI,
+  type GameMeta,
+  type GameRegistration,
+} from 'src/gameAPI';
 
 describe('game registry', () => {
   it('registers and retrieves a game', () => {
@@ -37,5 +43,18 @@ describe('game registry', () => {
 
   it('getGame returns undefined for unknown slug', () => {
     expect(getGame('missing-slug')).toBeUndefined();
+  });
+
+  it('front-end registry stores and lists games', () => {
+    const meta: GameMeta = {
+      id: 'frontend-game',
+      name: 'Front Test',
+      minPlayers: 1,
+      maxPlayers: 2,
+      createUI: () => null as any,
+    };
+    gameAPI.registerGame(meta);
+    expect(gameAPI.getGame('frontend-game')).toBe(meta);
+    expect(gameAPI.listGames()).toContain(meta);
   });
 });

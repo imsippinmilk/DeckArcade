@@ -4,6 +4,7 @@ import {
   createInitialState,
   applyAction,
   getNextActions,
+  scoreHand,
   payouts,
   type GameState,
   type Card,
@@ -199,5 +200,18 @@ describe('auto resolve', () => {
     state.shoeSize = 1;
     applyAction(state, 'hit');
     expect(state.stage).toBe('finished');
+  });
+});
+
+describe('scoreHand', () => {
+  it('handles aces as 1 or 11 and detects blackjack', () => {
+    const soft = scoreHand([card('A'), card('6')]);
+    expect(soft.total).toBe(17);
+    expect(soft.soft).toBe(true);
+    const hard = scoreHand([card('A'), card('9'), card('7')]);
+    expect(hard.total).toBe(17);
+    expect(hard.soft).toBe(false);
+    const bj = scoreHand([card('A'), card('K')]);
+    expect(bj.blackjack).toBe(true);
   });
 });
