@@ -4,12 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "dev:mp": "node scripts/dev-mp.mjs",
     "e2e": "playwright test",
+    "lint": "eslint .",
     "prepare": "husky install",
-    "dev:mp": "node scripts/dev-mp.mjs"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "",
@@ -37,12 +40,10 @@
   },
   "dependencies": {
     "bad-words": "^4.0.0",
+    "lz4js": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "xxhash-wasm": "^1.1.0",
     "zod": "^4.0.17"
-    "lz4js": "^0.2.0",
-    "zod": "^4.0.17",
-    "xxhash-wasm": "^1.1.0"
   }
 }
