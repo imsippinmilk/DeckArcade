@@ -33,6 +33,9 @@ export const MsgSchema = z.discriminatedUnion('type', [
     playerId: z.string(),
     ready: z.boolean(),
   }),
+  z.object({ type: z.literal('PAUSE'), roomId: z.string().optional() }),
+  z.object({ type: z.literal('RESUME'), roomId: z.string().optional() }),
+  z.object({ type: z.literal('END_GAME'), roomId: z.string().optional() }),
   z.object({
     type: z.literal('INTENT'),
     playerId: z.string(),
