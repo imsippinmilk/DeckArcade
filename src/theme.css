@@ -1,5 +1,31 @@
 :root {
   color-scheme: light dark;
+  --accent-color: #b00020;
+  --background-color: #ffffff;
+  --text-color: #111111;
+  --table-felt-color: #3f9e3f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #121212;
+    --text-color: #f0f0f0;
+    --table-felt-color: #0a5f0a;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background-color: #ffffff;
+  --text-color: #111111;
+  --table-felt-color: #3f9e3f;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --table-felt-color: #0a5f0a;
 }
 
 body {
@@ -8,41 +34,6 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
-  --accent-color: #b00020;
-  --background-color: #ffffff;
-  --text-color: #111111;
-  --table-felt-color: #3f9e3f;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    --background-color: #121212;
-    --text-color: #f0f0f0;
-    --table-felt-color: #0a5f0a;
-  }
-}
-
-body.light {
-  color-scheme: light;
-  --background-color: #ffffff;
-  --text-color: #111111;
-  --table-felt-color: #3f9e3f;
-}
-
-body.dark {
-  color-scheme: dark;
-  --background-color: #121212;
-  --text-color: #f0f0f0;
-  --table-felt-color: #0a5f0a;
-}
-
-button.theme-toggle {
-  background-color: var(--accent-color);
-  color: #fff;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 .table {
@@ -107,3 +98,4 @@ select:focus-visible {
     animation: none !important;
   }
 }
+
