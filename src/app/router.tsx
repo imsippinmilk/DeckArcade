@@ -1,3 +1,15 @@
+import React from 'react';
+
+interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  href: string;
+}
+
+export const Link: React.FC<LinkProps> = ({ href, children, ...props }) => (
+  <a href={href} {...props}>
+    {children}
+  </a>
+);
+
 import React, { ReactNode } from 'react';
 
 interface LinkProps {
@@ -33,3 +45,4 @@ export function Router({ routes }: { routes: Route[] }) {
   const route = routes.find((r) => r.path === path) ?? routes[0];
   return <>{route.element}</>;
 }
+
