@@ -313,7 +313,7 @@
 "minPlayers": 2,
 "maxPlayers": 9,
 "tags": \["strategy", "multiplayer", "table"],
-"status": "external-module"
+"status": "available"
 },
 {
 "slug": "title": "War",
@@ -360,7 +360,7 @@
 ],
 "rulesSummary": "Two hole cards, five community cards; best 5-card hand wins.",
 "cta": { "label": "Open", "href": "/games/poker-holdem" },
-"status": "external-module"
+"status": "available"
 },
 {
 "slug": "war",
@@ -526,9 +526,14 @@
 ]
 },
 "gameRegistry": {
+"available": ["blackjack", "poker-holdem"],
+"externalModules": \[
+"war",
+
 "available": \["blackjack", "war", "solitaire-klondike"],
 "externalModules": \[
 "poker-holdem",
+
 "hearts",
 "spades",
 "gin-rummy",

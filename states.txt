@@ -23,5 +23,17 @@ src/store/moneyPool.ts
 - LedgerEntry.reason: 'bet' (line 71)
 - LedgerEntry.reason: 'settle' (line 98)
 
+src/games/poker-holdem/index.ts
+- stage: 'pre-flop' (line 39)
+- stage: 'flop' (line 39)
+- stage: 'turn' (line 39)
+- stage: 'river' (line 39)
+- stage: 'showdown' (line 39)
+- stage: 'finished' (line 39)
+- Action.type: 'bet' (line 46)
+- Action.type: 'call' (line 47)
+- Action.type: 'check' (line 48)
+- Action.type: 'fold' (line 49)
+
 ## Unused States
 - None
