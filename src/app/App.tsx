@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ToastProvider, useToast } from './Toaster';
+import { LobbyJoin } from './LobbyJoin';
 
 type Theme = 'light' | 'dark';
 
@@ -47,11 +48,7 @@ function AppContent() {
           {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         </button>
       </header>
-      <main role="main">
-        <h1>Deck Arcade</h1>
-        <p>The current theme is {theme} mode.</p>
-        <div className="table" role="img" aria-label="Table preview" />
-      </main>
+      <LobbyJoin />
     </div>
   );
 }
