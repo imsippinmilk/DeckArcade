@@ -12,7 +12,7 @@ export interface ButtonProps {
 
 /**
  * A simple button component that respects the design tokens defined in
- * the theme. Variants define background and border colours. This
+ * the theme. Variants define background and border colors. This
  * component has generous padding and a large hit target to satisfy
  * accessibility requirements.
  */

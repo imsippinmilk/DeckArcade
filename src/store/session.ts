@@ -47,8 +47,6 @@ export const sessionStore = {
     this.state.isPrivate = isPrivate;
     this.state.muted = false;
     this.state.muteReason = undefined;
-    const msg: Msg = { type: 'JOIN', roomId, playerId };
-
     const msg: Msg = {
       type: 'JOIN',
       roomId,
