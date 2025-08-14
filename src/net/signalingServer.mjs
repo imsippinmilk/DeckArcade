@@ -1,9 +1,15 @@
 import { WebSocketServer } from 'ws';
 import { encodeMsg, parseMsg, hashState } from './protocol.js';
 import { randomUUID } from 'node:crypto';
+import { Filter } from 'bad-words';
 
 const rooms = new Map();
 const MAX_ROLLBACK = 20;
+const RATE_WINDOW = 10_000;
+const MAX_MSGS = 8;
+const MAX_LEN = 200;
+const filter = new Filter();
+const rateLimit = new Map();
 
 function getRoom(roomId) {
   return rooms.get(roomId);
@@ -47,8 +53,18 @@ export function startSignalingServer({ port = 8080 } = {}) {
           break;
         }
         case 'JOIN': {
-          const room = getRoom(msg.roomId);
-          if (!room || (room.pin && room.pin !== msg.pin)) {
+          let room = getRoom(msg.roomId);
+          if (!room) {
+            room = {
+              roomId: msg.roomId,
+              pin: msg.pin,
+              players: {},
+              seq: 0,
+              states: [],
+            };
+            rooms.set(msg.roomId, room);
+          }
+          if (room.pin && room.pin !== msg.pin) {
             ws.send(encodeMsg({ type: 'KICK', playerId: clientId }));
             break;
           }
@@ -76,11 +92,26 @@ export function startSignalingServer({ port = 8080 } = {}) {
         }
         case 'SEAT':
         case 'READY':
-        case 'CHAT':
         case 'MUTE':
         case 'KICK': {
           const room = getRoom(joinedRoomId);
           if (room) broadcast(room, msg, clientId);
+          break;
+        }
+        case 'CHAT': {
+          const room = getRoom(joinedRoomId);
+          if (room) {
+            const now = Date.now();
+            const times = rateLimit.get(clientId) || [];
+            const recent = times.filter((t) => now - t < RATE_WINDOW);
+            if (recent.length >= MAX_MSGS) break;
+            recent.push(now);
+            rateLimit.set(clientId, recent);
+            let text = String(msg.message || '').slice(0, MAX_LEN);
+            text = filter.clean(text);
+            const out = { type: 'CHAT', playerId: clientId, message: text, ts: now };
+            broadcast(room, out, null);
+          }
           break;
         }
         case 'INTENT': {
@@ -134,6 +165,7 @@ export function startSignalingServer({ port = 8080 } = {}) {
           broadcast(room, { type: 'LEAVE', roomId: joinedRoomId, playerId: clientId }, clientId);
         }
       }
+      rateLimit.delete(clientId);
     });
   });
 
