@@ -1,0 +1,5 @@
+node_modules
+coverage
+playwright-report
+html-report
+.DS_Store
