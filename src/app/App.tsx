@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ToastProvider, useToast } from './Toaster';
+import { Header } from './Header';
 
 type Theme = 'light' | 'dark';
 
@@ -37,7 +38,7 @@ function AppContent() {
 
   return (
     <div>
-      <header>
+      <Header>
         <button
           className="theme-toggle"
           onClick={toggleTheme}
@@ -46,7 +47,7 @@ function AppContent() {
         >
           {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         </button>
-      </header>
+      </Header>
       <main role="main">
         <h1>Deck Arcade</h1>
         <p>The current theme is {theme} mode.</p>
