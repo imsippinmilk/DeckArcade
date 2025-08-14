@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useGameSchema from './useGameSchema';
-import { sessionStore } from '../store/session';
+import { sessionStore } from '../store/tableSession';
 import { useToast } from './Toaster';
 
 interface Props {
