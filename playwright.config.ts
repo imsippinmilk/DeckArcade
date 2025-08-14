@@ -6,6 +6,9 @@ export default defineConfig({
     headless: true,
     baseURL: 'http://localhost:5173',
     trace: 'retain-on-failure',
+    launchOptions: {
+      args: ['--use-fake-device-for-media-stream'],
+    },
   },
   webServer: {
     command: 'pnpm exec vite dev --port 5173',
