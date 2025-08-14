@@ -5,15 +5,15 @@ This file catalogs all known state identifiers across the codebase. Before addin
 ## Used States
 
 src/games/blackjack/rules.ts
-- stage: 'player' (line 65)
-- stage: 'dealer' (line 65)
-- stage: 'finished' (line 65)
-- events: 'reshuffle' (line 146)
-- Outcome.result: 'win' (line 54)
-- Outcome.result: 'lose' (line 54)
-- Outcome.result: 'push' (line 54)
-- Outcome.result: 'blackjack' (line 54)
-- Outcome.result: 'surrender' (line 54)
+- stage: 'player' (line 48)
+- stage: 'dealer' (line 48)
+- stage: 'finished' (line 48)
+- events: 'reshuffle' (line 138)
+- Outcome.result: 'win' (line 29)
+- Outcome.result: 'lose' (line 29)
+- Outcome.result: 'push' (line 29)
+- Outcome.result: 'blackjack' (line 29)
+- Outcome.result: 'surrender' (line 29)
 
 src/store/moneyPool.ts
 - SettlementOutcome.result: 'win' (line 18)

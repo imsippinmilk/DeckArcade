@@ -1,31 +1,33 @@
-import type { SettlementOutcome } from '../../store/moneyPool';
+import { moneyActions, moneyPool } from '../../store/moneyPool';
 import { economy } from '../../store/economy';
 
-/**
- * Deduct chips from a player's balance when they place a bet. This simply
- * proxies to the shared money pool after ensuring the player has a starting
- * balance.
- */
+export interface Outcome {
+  playerId: string;
+  amount: number;
+  result: 'win' | 'lose' | 'push';
+}
+
 export function placeBet(handId: string, playerId: string, amount: number) {
   economy.ensurePlayer(playerId);
-  if (!economy.sharedPool.canBet(playerId, amount)) {
+  const balance = moneyPool.getState().balances[playerId] || 0;
+  if (balance < amount) {
     throw new Error('insufficient balance');
   }
-  economy.sharedPool.recordBet(handId, playerId, amount);
+  moneyActions.transferToPot(playerId, amount, handId);
 }
 
-/**
- * Settle a blackjack hand and update player balances in the shared pool. The
- * outcomes array mirrors the API used by `MoneyPool.settle`.
- */
-export function settleHand(handId: string, outcomes: SettlementOutcome[]) {
-  economy.sharedPool.settle(handId, outcomes);
+export function settleHand(handId: string, outcomes: Outcome[]) {
+  const payouts: Record<string, number> = {};
+  for (const o of outcomes) {
+    if (o.result === 'win')
+      payouts[o.playerId] = (payouts[o.playerId] || 0) + o.amount * 2;
+    else if (o.result === 'push')
+      payouts[o.playerId] = (payouts[o.playerId] || 0) + o.amount;
+  }
+  moneyActions.settleWinners(payouts, handId);
 }
 
-/**
- * Convenience accessor for displaying a player's current chip balance.
- */
 export function getBalance(playerId: string): number {
   economy.ensurePlayer(playerId);
-  return economy.sharedPool.balances[playerId] ?? 0;
+  return moneyPool.getState().balances[playerId] ?? 0;
 }
