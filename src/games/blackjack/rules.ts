@@ -127,6 +127,14 @@ function checkPenetration(state: GameState) {
   }
 }
 
+export function getPlayerView(
+  state: GameState,
+  _playerId: string,
+): Omit<GameState, 'shoe'> & { shoeCount: number } {
+  const { shoe, ...rest } = state;
+  return { ...rest, shoeCount: shoe.length };
+}
+
 export function getNextActions(state: GameState, _playerId: string): Action[] {
   if (state.stage !== 'player') return [];
   const hand = state.hands[state.active];
@@ -155,6 +163,14 @@ export function getNextActions(state: GameState, _playerId: string): Action[] {
     }
   }
   return actions;
+}
+
+export function validateAction(
+  state: GameState,
+  action: Action,
+  playerId?: string,
+): boolean {
+  return getNextActions(state, playerId ?? '').includes(action);
 }
 
 function settle(state: GameState) {

@@ -2,26 +2,29 @@ import { registerGame } from '../../gameAPI';
 import {
   createInitialState,
   applyAction,
+  getPlayerView,
   getNextActions,
-  Hand,
-  GameState,
-  BlackjackConfig,
+  validateAction,
 } from './rules';
 
 registerGame({
   slug: 'blackjack',
   meta: { name: 'Blackjack' },
-  createInitialState: (config: BlackjackConfig) => createInitialState(config),
-  applyAction: (state, action) =>
-    applyAction(state as GameState, action as any),
-  getPlayerView: (state) => state,
-  getNextActions: (state) => getNextActions(state as GameState, ''),
+  createInitialState,
+  applyAction,
+  getPlayerView,
+  getNextActions,
   rules: {
-    validate: (state, action) =>
-      getNextActions(state as GameState, '').includes(action as any),
+    validate: validateAction,
   },
 });
 
-export { createInitialState, applyAction, getNextActions } from './rules';
+export {
+  createInitialState,
+  applyAction,
+  getPlayerView,
+  getNextActions,
+  validateAction,
+} from './rules';
 export type { Hand, GameState, BlackjackConfig } from './rules';
 export { placeBet, settleHand, getBalance } from './betting';
