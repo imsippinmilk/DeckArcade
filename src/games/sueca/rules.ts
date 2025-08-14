@@ -1,4 +1,6 @@
-export type Suit = 'C' | 'D' | 'H' | 'S';
+import { buildDeck, SUITS } from '../../util/cards';
+
+export type Suit = (typeof SUITS)[number];
 export type Rank = 'A' | '7' | 'K' | 'J' | 'Q' | '6' | '5' | '4' | '3' | '2';
 export interface Card {
   suit: Suit;
@@ -19,16 +21,8 @@ const POINTS: Record<Rank, number> = {
   '2': 0,
 };
 
-export const createDeck = (): Card[] => {
-  const suits: Suit[] = ['C', 'D', 'H', 'S'];
-  const deck: Card[] = [];
-  for (const suit of suits) {
-    for (const rank of ORDER) {
-      deck.push({ suit, rank });
-    }
-  }
-  return deck;
-};
+export const createDeck = (): Card[] =>
+  buildDeck(ORDER, (rank, suit) => ({ suit, rank }));
 
 export interface DealResult {
   hands: Card[][];

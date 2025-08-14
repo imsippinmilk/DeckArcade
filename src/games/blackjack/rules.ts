@@ -12,7 +12,9 @@ export type Rank =
   | 'J'
   | 'Q'
   | 'K';
-export type Suit = 'C' | 'D' | 'H' | 'S';
+import { buildDeck, SUITS } from '../../util/cards';
+
+export type Suit = (typeof SUITS)[number];
 
 export interface Card {
   rank: Rank;
@@ -50,26 +52,24 @@ export interface GameState {
 
 export type Action = 'hit' | 'stand' | 'split' | 'surrender';
 
+const ranks: Rank[] = [
+  'A',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+  'J',
+  'Q',
+  'K',
+];
+
 function createDeck(): Card[] {
-  const suits: Suit[] = ['C', 'D', 'H', 'S'];
-  const ranks: Rank[] = [
-    'A',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    '10',
-    'J',
-    'Q',
-    'K',
-  ];
-  const deck: Card[] = [];
-  for (const r of ranks) for (const s of suits) deck.push({ rank: r, suit: s });
-  return deck;
+  return buildDeck(ranks, (rank, suit) => ({ rank, suit }));
 }
 
 export function createInitialState(config: BlackjackConfig): GameState {

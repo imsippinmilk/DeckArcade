@@ -1,4 +1,7 @@
-export type Suit = 'C' | 'D' | 'H' | 'S';
+import { buildDeck, shuffle, SUITS } from '../../util/cards';
+import { mulberry32 } from '../../util/random';
+
+export type Suit = (typeof SUITS)[number];
 
 export interface Card {
   rank: number; // 1-13
@@ -49,37 +52,17 @@ function restoreState(target: GameState, snap: GameStateSnapshot): void {
   target.isWon = snap.isWon;
 }
 
-function seededRng(seed: number): () => number {
-  return function () {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
 function createDeck(): Card[] {
-  const suits: Suit[] = ['C', 'D', 'H', 'S'];
-  const deck: Card[] = [];
-  for (const suit of suits) {
-    for (let rank = 1; rank <= 13; rank++) {
-      deck.push({ rank, suit, faceUp: false });
-    }
-  }
-  return deck;
+  const ranks = Array.from({ length: 13 }, (_, i) => i + 1);
+  return buildDeck(ranks, (rank, suit) => ({ rank, suit, faceUp: false }));
 }
 
 export function createInitialState(
   seed = Date.now(),
   opts: { drawMode?: 'draw-1' | 'draw-3'; maxRedeals?: number } = {},
 ): GameState {
-  const rng = seededRng(seed);
-  const deck = createDeck();
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
+  const rng = mulberry32(seed);
+  const deck = shuffle(createDeck(), rng);
   const tableau: Card[][] = Array.from({ length: 7 }, () => []);
   for (let i = 0; i < 7; i++) {
     for (let j = 0; j <= i; j++) {

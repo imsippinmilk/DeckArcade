@@ -1,7 +1,9 @@
 import { registerGame } from '../../gameAPI';
 import { createMoneyPool, type MoneyPool } from '../../store/moneyPool';
+import { buildDeck, shuffle, SUITS } from '../../util/cards';
+import { rngFromString } from '../../util/random';
 
-export type Suit = 'S' | 'H' | 'D' | 'C';
+export type Suit = (typeof SUITS)[number];
 export type Rank =
   | '2'
   | '3'
@@ -48,46 +50,24 @@ export type Action =
   | { type: 'check'; playerId: string }
   | { type: 'fold'; playerId: string };
 
+const ranks: Rank[] = [
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  'T',
+  'J',
+  'Q',
+  'K',
+  'A',
+];
+
 function createDeck(): Card[] {
-  const suits: Suit[] = ['S', 'H', 'D', 'C'];
-  const ranks: Rank[] = [
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-    '9',
-    'T',
-    'J',
-    'Q',
-    'K',
-    'A',
-  ];
-  const deck: Card[] = [];
-  for (const r of ranks) for (const s of suits) deck.push(`${r}${s}` as Card);
-  return deck;
-}
-
-function rngFromSeed(seed: string) {
-  let h = 0;
-  for (let i = 0; i < seed.length; i++)
-    h = Math.imul(31, h) + seed.charCodeAt(i);
-  return function () {
-    h |= 0;
-    h = (h + 0x6d2b79f5) | 0;
-    let t = Math.imul(h ^ (h >>> 15), 1 | h);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function shuffle<T>(arr: T[], rnd: () => number) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(rnd() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
+  return buildDeck(ranks, (r, s) => `${r}${s}` as Card);
 }
 
 function draw(state: GameState): Card {
@@ -366,7 +346,7 @@ function createInitialState(
   seed = Date.now().toString(),
   playerIds: string[] = ['p1', 'p2'],
 ): GameState {
-  const rnd = rngFromSeed(seed);
+  const rnd = rngFromString(seed);
   const deck = createDeck();
   shuffle(deck, rnd);
   const pool = createMoneyPool();

@@ -12,7 +12,9 @@ export type Rank =
   | 'Q'
   | 'K'
   | 'A';
-export type Suit = 'C' | 'D' | 'H' | 'S';
+import { SUITS, buildDeck, shuffle } from '../../util/cards';
+
+export type Suit = (typeof SUITS)[number];
 
 export interface Card {
   rank: Rank;
@@ -42,19 +44,7 @@ const rankOrder: Rank[] = [
 ];
 
 function createDeck(): Card[] {
-  const suits: Suit[] = ['C', 'D', 'H', 'S'];
-  const deck: Card[] = [];
-  for (const r of rankOrder)
-    for (const s of suits) deck.push({ rank: r, suit: s });
-  return deck;
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+  return buildDeck(rankOrder, (rank, suit) => ({ rank, suit }));
 }
 
 export function createInitialState(): GameState {
