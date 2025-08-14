@@ -63,7 +63,7 @@ const Button: React.FC<ButtonProps> = ({
   }
 
   return (
-    <button onClick={disabled ? undefined : onClick} style={styles} aria-disabled={disabled}>
+    <button onClick={disabled ? undefined : onClick} style={styles} disabled={disabled} aria-disabled={disabled}>
       {children}
     </button>
   );
