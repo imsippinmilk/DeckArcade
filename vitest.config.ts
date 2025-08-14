@@ -9,6 +9,7 @@ export default defineConfig({
   },
   test: {
     exclude: [...configDefaults.exclude, 'e2e/**'],
+    environment: 'jsdom',
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

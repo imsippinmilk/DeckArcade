@@ -8,3 +8,21 @@ export interface Session {
   playerName: string;
   joinedAt?: number;
 }
+
+export interface Table {
+  id: string;
+  config: Record<string, unknown>;
+}
+
+export const sessionStore = {
+  tables: [] as Table[],
+  createTable(config: Record<string, unknown>): Table {
+    const snapshot = JSON.parse(JSON.stringify(config));
+    const table: Table = {
+      id: `table-${this.tables.length + 1}`,
+      config: snapshot,
+    };
+    this.tables.push(table);
+    return table;
+  },
+};
