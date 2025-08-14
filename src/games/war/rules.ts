@@ -59,11 +59,26 @@ function value(rank: Rank): number {
 
 export function applyAction(state: GameState, action: Action): void {
   if (action !== 'draw' || state.deck.length < 2) return;
+  // draw the initial face-up cards
   const p1 = state.deck.pop()!;
   const p2 = state.deck.pop()!;
   state.lastDraw = { p1, p2 };
-  const v1 = value(p1.rank);
-  const v2 = value(p2.rank);
+  let v1 = value(p1.rank);
+  let v2 = value(p2.rank);
+
+  // if the ranks tie and there are enough cards, resolve a simple "war"
+  if (v1 === v2 && state.deck.length >= 4) {
+    // burn one card for each player
+    state.deck.pop();
+    state.deck.pop();
+    // draw new face-up cards for comparison
+    const war1 = state.deck.pop()!;
+    const war2 = state.deck.pop()!;
+    state.lastDraw = { p1: war1, p2: war2 };
+    v1 = value(war1.rank);
+    v2 = value(war2.rank);
+  }
+
   if (v1 > v2) state.winner = 'p1';
   else if (v2 > v1) state.winner = 'p2';
   else state.winner = 'war';

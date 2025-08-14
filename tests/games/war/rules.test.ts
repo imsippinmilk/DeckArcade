@@ -5,7 +5,7 @@ import {
   getPlayerView,
   type GameState,
   type Card,
-} from 'src/games/war/rules';
+} from 'src/games/war';
 
 const card = (rank: Card['rank']): Card => ({ rank, suit: 'S' });
 
@@ -26,6 +26,23 @@ describe('war logic', () => {
     const state: GameState = { deck: [card('7'), card('7')] };
     applyAction(state, 'draw');
     expect(state.winner).toBe('war');
+  });
+
+  it('resolves a basic war when enough cards remain', () => {
+    // Deck order is bottom -> top. Popped in reverse when drawing.
+    const state: GameState = {
+      deck: [
+        card('5'), // p2 war card
+        card('K'), // p1 war card
+        card('4'), // burn for p2
+        card('3'), // burn for p1
+        card('7'), // p2 initial
+        card('7'), // p1 initial
+      ],
+    };
+    applyAction(state, 'draw');
+    expect(state.winner).toBe('p1');
+    expect(state.lastDraw).toEqual({ p1: card('K'), p2: card('5') });
   });
 });
 

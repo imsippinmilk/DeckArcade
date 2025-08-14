@@ -25,3 +25,4 @@ export {
   getNextActions,
   validateAction,
 };
+export type { Card, GameState } from './rules';
