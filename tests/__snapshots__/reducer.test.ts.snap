@@ -1,0 +1,93 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`reducer core > snapshot: canonical sequence is stable 1`] = `
+{
+  "events": [
+    [
+      {
+        "payload": {
+          "playerId": "p1",
+          "type": "DEAL",
+        },
+        "playerId": "p1",
+        "type": "DEAL",
+      },
+    ],
+    [
+      {
+        "payload": {
+          "amount": 5,
+          "playerId": "p2",
+          "type": "BET",
+        },
+        "playerId": "p2",
+        "type": "BET",
+      },
+    ],
+    [
+      {
+        "payload": {
+          "playerId": "p1",
+          "type": "WIN",
+        },
+        "playerId": "p1",
+        "type": "WIN",
+      },
+    ],
+  ],
+  "state": {
+    "auditTrail": [
+      {
+        "action": {
+          "playerId": "p1",
+          "type": "DEAL",
+        },
+        "playerId": "p1",
+        "ts": 0,
+      },
+      {
+        "action": {
+          "amount": 5,
+          "playerId": "p2",
+          "type": "BET",
+        },
+        "playerId": "p2",
+        "ts": 0,
+      },
+      {
+        "action": {
+          "playerId": "p1",
+          "type": "WIN",
+        },
+        "playerId": "p1",
+        "ts": 0,
+      },
+    ],
+    "availableActions": [
+      "DEAL",
+      "BET",
+      "WIN",
+      "SHUFFLE",
+    ],
+    "blacklist": [],
+    "currentPlayer": "p1",
+    "players": {
+      "p1": {
+        "concealed": {
+          "card": "AH",
+        },
+      },
+      "p2": {
+        "concealed": {
+          "card": "KC",
+        },
+      },
+    },
+    "rngSeed": 2247290776,
+    "timers": {
+      "p1": 30000,
+      "p2": 30000,
+    },
+  },
+}
+`;
