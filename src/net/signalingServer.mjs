@@ -3,6 +3,7 @@ import { encodeMsg, parseMsg, hashState } from './protocol.js';
 import { randomUUID } from 'node:crypto';
 
 const rooms = new Map();
+const resumeTokens = new Map();
 const MAX_ROLLBACK = 20;
 
 function getRoom(roomId) {
@@ -40,6 +41,7 @@ export function startSignalingServer({ port = 8080 } = {}) {
             roomId,
             pin: msg.pin,
             players: {},
+            seats: {},
             seq: 0,
             states: [],
           });
@@ -54,7 +56,10 @@ export function startSignalingServer({ port = 8080 } = {}) {
           }
           room.players[clientId] = { socket: ws };
           joinedRoomId = room.roomId;
-          broadcast(room, { type: 'JOIN', roomId: room.roomId, playerId: clientId });
+          broadcast(room, { type: 'JOIN', roomId: room.roomId, playerId: clientId, profile: msg.profile });
+          const resumeToken = randomUUID();
+          resumeTokens.set(resumeToken, { roomId: room.roomId, playerId: clientId, seq: room.seq });
+          ws.send(encodeMsg({ type: 'RESUME_TOKEN', resumeToken }));
           if (room.states.length) {
             const last = room.states[room.states.length - 1];
             ws.send(encodeMsg({
@@ -74,7 +79,14 @@ export function startSignalingServer({ port = 8080 } = {}) {
           }
           break;
         }
-        case 'SEAT':
+        case 'SEAT': {
+          const room = getRoom(joinedRoomId);
+          if (room) {
+            room.seats[msg.playerId] = msg.seat;
+            broadcast(room, msg, clientId);
+          }
+          break;
+        }
         case 'READY':
         case 'CHAT':
         case 'MUTE':
@@ -118,6 +130,30 @@ export function startSignalingServer({ port = 8080 } = {}) {
             room.states.push({ state: msg.state, seq: msg.seq, checksum });
             if (room.states.length > MAX_ROLLBACK) room.states.shift();
             broadcast(room, msg, clientId);
+          }
+          break;
+        }
+        case 'HELLO': {
+          if (!msg.resumeToken) break;
+          const resume = resumeTokens.get(msg.resumeToken);
+          if (!resume) break;
+          const room = getRoom(resume.roomId);
+          if (!room) break;
+          joinedRoomId = resume.roomId;
+          room.players[resume.playerId] = { socket: ws };
+          ws.send(encodeMsg({ type: 'HELLO', clientId: resume.playerId }));
+          const seat = room.seats[resume.playerId];
+          if (seat !== undefined) {
+            ws.send(encodeMsg({ type: 'SEAT', playerId: resume.playerId, seat }));
+          }
+          const last = room.states[room.states.length - 1];
+          if (last) {
+            ws.send(encodeMsg({
+              type: 'STATE_SNAPSHOT',
+              seq: last.seq,
+              state: last.state,
+              checksum: last.checksum,
+            }));
           }
           break;
         }
