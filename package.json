@@ -37,12 +37,10 @@
   },
   "dependencies": {
     "bad-words": "^4.0.0",
+    "lz4js": "^0.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "xxhash-wasm": "^1.1.0",
     "zod": "^4.0.17"
-    "lz4js": "^0.2.0",
-    "zod": "^4.0.17",
-    "xxhash-wasm": "^1.1.0"
   }
 }
