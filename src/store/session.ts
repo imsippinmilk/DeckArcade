@@ -1,24 +1,39 @@
-/**
- * Types and helpers relating to a player's session. Eventually this
- * module may use a state management library like Redux or Zustand,
- * but for now it simply defines a TypeScript interface.
- */
-export interface Session {
-  id: string;
-  playerName: string;
-  joinedAt?: number;
-}
+import { encodeMsg, Msg } from '../net/protocol';
 
-export interface Table {
-  id: string;
-  config: Record<string, unknown>;
+export interface SessionState {
+  roomId?: string;
+  playerId?: string;
+  seat?: number;
+  muted?: boolean;
+  isPrivate?: boolean;
 }
 
 export const sessionStore = {
-  tables: [] as Table[],
-  createTable(config: Record<string, unknown>): Table {
+  state: {} as SessionState,
+  tables: [] as { id: string; config: Record<string, unknown> }[],
+
+  join(roomId: string, playerId: string, isPrivate = false): string {
+    this.state.roomId = roomId;
+    this.state.playerId = playerId;
+    this.state.isPrivate = isPrivate;
+    const msg: Msg = { type: 'JOIN', roomId, playerId };
+    return encodeMsg(msg);
+  },
+
+  leave(): string | null {
+    if (!this.state.roomId || !this.state.playerId) return null;
+    const msg: Msg = {
+      type: 'LEAVE',
+      roomId: this.state.roomId,
+      playerId: this.state.playerId,
+    };
+    this.state = {} as SessionState;
+    return encodeMsg(msg);
+  },
+
+  createTable(config: Record<string, unknown>) {
     const snapshot = JSON.parse(JSON.stringify(config));
-    const table: Table = {
+    const table = {
       id: `table-${this.tables.length + 1}`,
       config: snapshot,
     };
