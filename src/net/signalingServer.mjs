@@ -126,6 +126,12 @@ export function startSignalingServer({ port = 8080 } = {}) {
           }
           break;
         }
+        case 'RTC_OFFER':
+        case 'RTC_ANSWER': {
+          const room = getRoom(joinedRoomId);
+          if (room) broadcast(room, msg, clientId);
+          break;
+        }
         case 'INTENT': {
           const room = getRoom(joinedRoomId);
           if (room) {

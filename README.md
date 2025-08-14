@@ -316,8 +316,7 @@
 "status": "available"
 },
 {
-"slug": "war",
-"title": "War",
+"slug": "title": "War",
 "thumbnail": "/img/games/war/thumb.jpg",
 "short": "The simplest showdown—now with speed rounds.",
 "cta": { "label": "Open", "href": "/games/war" },
@@ -375,13 +374,13 @@
 ],
 "rulesSummary": "High card takes the pile; ties trigger 'war' with burn-and-battle.",
 "cta": { "label": "Open", "href": "/games/war" },
-"status": "external-module"
+"status": "available"
 },
 { "slug": "hearts", "title": "Hearts", "route": "/games/hearts", "players": "4", "difficulty": "Medium", "tags": \["trick-taking"], "cta": { "label": "Open", "href": "/games/hearts" }, "status": "external-module" },
 { "slug": "spades", "title": "Spades", "route": "/games/spades", "players": "4", "difficulty": "Medium", "tags": \["trick-taking", "team"], "cta": { "label": "Open", "href": "/games/spades" }, "status": "external-module" },
 { "slug": "gin-rummy", "title": "Gin Rummy", "route": "/games/gin-rummy", "players": "2", "difficulty": "Medium", "cta": { "label": "Open", "href": "/games/gin-rummy" }, "status": "external-module" },
 { "slug": "crazy-eights", "title": "Crazy Eights", "route": "/games/crazy-eights", "players": "2–6", "difficulty": "Easy", "tags": \["shedding", "family"], "cta": { "label": "Open", "href": "/games/crazy-eights" }, "status": "external-module" },
-{ "slug": "solitaire-klondike", "title": "Solitaire (Klondike)", "route": "/games/solitaire-klondike", "players": "1", "difficulty": "Easy", "cta": { "label": "Open", "href": "/games/solitaire-klondike" }, "status": "external-module" },
+{ "slug": "solitaire-klondike", "title": "Solitaire (Klondike)", "route": "/games/solitaire-klondike", "players": "1", "difficulty": "Easy", "cta": { "label": "Open", "href": "/games/solitaire-klondike" }, "status": "available" },
 { "slug": "euchre", "title": "Euchre", "route": "/games/euchre", "players": "4", "difficulty": "Medium", "tags": \["trick-taking", "team"], "cta": { "label": "Open", "href": "/games/euchre" }, "status": "external-module" },
 { "slug": "baccarat", "title": "Baccarat", "route": "/games/baccarat", "players": "1–7", "difficulty": "Easy", "cta": { "label": "Open", "href": "/games/baccarat" }, "status": "external-module" },
 { "slug": "cribbage", "title": "Cribbage", "route": "/games/cribbage", "players": "2", "difficulty": "Medium", "cta": { "label": "Open", "href": "/games/cribbage" }, "status": "external-module" },
@@ -516,12 +515,10 @@
 "items": \[
 "blackjack",
 "poker-holdem",
-"war",
 "hearts",
 "spades",
 "gin-rummy",
 "crazy-eights",
-"solitaire-klondike",
 "euchre",
 "baccarat",
 "cribbage",
@@ -532,11 +529,15 @@
 "available": ["blackjack", "poker-holdem"],
 "externalModules": \[
 "war",
+
+"available": \["blackjack", "war", "solitaire-klondike"],
+"externalModules": \[
+"poker-holdem",
+
 "hearts",
 "spades",
 "gin-rummy",
 "crazy-eights",
-"solitaire-klondike",
 "euchre",
 "baccarat",
 "cribbage",
