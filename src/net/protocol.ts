@@ -85,6 +85,18 @@ export const MsgSchema = z.discriminatedUnion('type', [
     message: z.string(),
     ts: z.number().optional(),
   }),
+
+  // WebRTC signalling for voice chat
+  z.object({
+    type: z.literal('RTC_OFFER'),
+    sdp: z.string(),
+    from: z.string(),
+  }),
+  z.object({
+    type: z.literal('RTC_ANSWER'),
+    sdp: z.string(),
+    from: z.string(),
+  }),
 ]);
 
 export type Msg = z.infer<typeof MsgSchema>;

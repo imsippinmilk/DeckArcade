@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Filter } from 'bad-words';
 import { Msg } from '../net/protocol';
 import { sessionStore } from '../store/session';
+import { setupPeerConnection } from '../net/webrtc';
+import { initVoicePTT, disposeVoicePTT, setMuted } from './VoicePTT';
 
 const EMOTES: Record<string, string> = { ':smile:': '🙂' };
 const ROOM_ID = 'test-room';
@@ -25,6 +27,8 @@ const TextChat: React.FC = () => {
   const filterRef = useRef(new Filter());
   const playerIdRef = useRef('');
   const listRef = useRef<HTMLDivElement>(null);
+  const pcRef = useRef<RTCPeerConnection | null>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem(`chat:${ROOM_ID}`);
@@ -36,9 +40,20 @@ const TextChat: React.FC = () => {
       }
     }
 
+    const pc = setupPeerConnection();
+    if (pc) {
+      pcRef.current = pc;
+      pc.ontrack = (ev) => {
+        const audio = new Audio();
+        audio.srcObject = ev.streams[0];
+        void audio.play().catch(() => undefined);
+      };
+      initVoicePTT(pc, indicatorRef.current || undefined);
+    }
+
     const ws = new WebSocket('ws://localhost:8080');
     wsRef.current = ws;
-    ws.onmessage = (ev) => {
+    ws.onmessage = async (ev) => {
       const msg: Msg = JSON.parse(ev.data);
       switch (msg.type) {
         case 'HELLO':
@@ -47,6 +62,37 @@ const TextChat: React.FC = () => {
           (window as any).__chatId = msg.clientId;
           const joinMsg = sessionStore.join(ROOM_ID, msg.clientId);
           ws.send(joinMsg);
+          break;
+        case 'JOIN':
+          if (msg.playerId && msg.playerId !== playerIdRef.current) {
+            await sendOffer();
+          }
+          break;
+        case 'RTC_OFFER':
+          if (pcRef.current) {
+            await pcRef.current.setRemoteDescription({
+              type: 'offer',
+              sdp: msg.sdp,
+            });
+            const answer = await pcRef.current.createAnswer();
+            await pcRef.current.setLocalDescription(answer);
+            await waitForIce(pcRef.current);
+            ws.send(
+              JSON.stringify({
+                type: 'RTC_ANSWER',
+                from: playerIdRef.current,
+                sdp: pcRef.current.localDescription?.sdp,
+              }),
+            );
+          }
+          break;
+        case 'RTC_ANSWER':
+          if (pcRef.current) {
+            await pcRef.current.setRemoteDescription({
+              type: 'answer',
+              sdp: msg.sdp,
+            });
+          }
           break;
         case 'CHAT':
           addMessage({
@@ -58,6 +104,7 @@ const TextChat: React.FC = () => {
           if (msg.playerId === playerIdRef.current) {
             sessionStore.state.muted = msg.muted;
             sessionStore.state.muteReason = msg.reason;
+            setMuted(msg.muted);
             setMutedReason(msg.muted ? msg.reason || 'You are muted' : null);
           }
           break;
@@ -66,9 +113,36 @@ const TextChat: React.FC = () => {
       }
     };
 
+    async function sendOffer() {
+      if (!pcRef.current) return;
+      const offer = await pcRef.current.createOffer();
+      await pcRef.current.setLocalDescription(offer);
+      await waitForIce(pcRef.current);
+      ws.send(
+        JSON.stringify({
+          type: 'RTC_OFFER',
+          from: playerIdRef.current,
+          sdp: pcRef.current.localDescription?.sdp,
+        }),
+      );
+    }
+
+    function waitForIce(pc: RTCPeerConnection): Promise<void> {
+      return new Promise((resolve) => {
+        if (pc.iceGatheringState === 'complete') resolve();
+        else {
+          pc.addEventListener('icegatheringstatechange', () => {
+            if (pc.iceGatheringState === 'complete') resolve();
+          });
+        }
+      });
+    }
+
     return () => {
       const leaveMsg = sessionStore.leave();
       if (leaveMsg) ws.send(leaveMsg);
+      disposeVoicePTT();
+      pcRef.current?.close();
       ws.close();
     };
   }, []);
@@ -100,6 +174,27 @@ const TextChat: React.FC = () => {
 
   return (
     <div style={{ borderTop: '1px solid #2a2f33', padding: '0.5rem' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          marginBottom: '0.5rem',
+        }}
+      >
+        <div
+          id="pttIndicator"
+          ref={indicatorRef}
+          style={{
+            width: '1rem',
+            height: '1rem',
+            borderRadius: '50%',
+            background: '#555',
+            transition: 'background 0.2s',
+            marginRight: '0.5rem',
+          }}
+        ></div>
+        <span style={{ fontSize: '0.75rem' }}>Hold Space to talk</span>
+      </div>
       <div
         ref={listRef}
         style={{
