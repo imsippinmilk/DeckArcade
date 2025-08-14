@@ -11,7 +11,7 @@
   padding: 1rem 0;
 }
 
-@media (max-width: 40em) {
+@media (max-width: var(--bp-sm)) {
   .app-header {
     flex-direction: column;
     gap: 0.5rem;

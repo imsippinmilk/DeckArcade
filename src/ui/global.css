@@ -17,8 +17,20 @@
   --shadow-card: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.35);
   --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', var(--font-body);
   --layout-max-width: 82.5rem;
   --layout-gutter: 1rem;
+  --bp-xs: 22.5em;
+  --bp-sm: 40em;
+  --bp-md: 48em;
+  --bp-lg: 64em;
+  --bp-xl: 80em;
+  --anim-duration-xfast: 90ms;
+  --anim-duration-fast: 150ms;
+  --anim-duration-base: 220ms;
+  --anim-duration-slow: 320ms;
+  --anim-duration-xslow: 500ms;
+  --anim-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 html, body, #root {
@@ -43,7 +55,7 @@ button {
   font-family: var(--font-body);
 }
 
-@media (max-width: 40em) {
+@media (max-width: var(--bp-sm)) {
   h1 {
     font-size: 1.75rem;
   }

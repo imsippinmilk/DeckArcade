@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.3s var(--animation-ease, cubic-bezier(0.4,0,0.2,1));
+  animation: fadeIn var(--anim-duration-base) var(--anim-ease);
 }
 
 .da-modal {
@@ -15,7 +15,7 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   max-width: 90vw;
-  animation: scaleIn 0.3s var(--animation-ease, cubic-bezier(0.4,0,0.2,1));
+  animation: scaleIn var(--anim-duration-base) var(--anim-ease);
 }
 
 @media (min-width: 40em) {
