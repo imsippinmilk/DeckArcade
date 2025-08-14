@@ -24,7 +24,7 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const baseStyles: React.CSSProperties = {
     padding: `${theme.spaceScale[3]} ${theme.spaceScale[5]}`,
-    borderRadius: theme.radius.md as unknown as number,
+    borderRadius: theme.radius.md,
     fontFamily: theme.typography.body,
     fontSize: '1rem',
     cursor: disabled ? 'not-allowed' : 'pointer',
