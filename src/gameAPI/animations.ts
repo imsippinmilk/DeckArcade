@@ -1,22 +1,34 @@
-/**
- * Animation API used by game modules. Games can call these
- * functions to trigger predefined animation presets. The actual
- * implementation will be provided in a later development stage,
- * potentially using a library such as Framer Motion or CSS keyframes.
- */
-export function play(presetName: string, target: HTMLElement, options?: Record<string, unknown>): void {
-  // TODO: play the named animation on the target element
-}
+import {
+  onDeal,
+  onBet,
+  onWin,
+  onReveal,
+  onInvalid,
+} from '../animations/presets';
 
-export function stop(target: HTMLElement, presetName: string): void {
-  // TODO: stop the animation
-}
+export type DomainEvent = { type: keyof typeof hookMap };
 
-export function register(presetName: string, presetDef: unknown): void {
-  // TODO: allow new animation presets to be registered at runtime
-}
+const hookMap = {
+  deal: onDeal,
+  bet: onBet,
+  win: onWin,
+  reveal: onReveal,
+  invalid: onInvalid,
+} as const;
 
 export function useReducedMotion(): boolean {
-  // TODO: detect OS/Browser setting for reduced motion
-  return false;
+  return (
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(prefers-reduced-motion)').matches
+  );
+}
+
+export function handleDomainEvent(
+  event: DomainEvent,
+  target: HTMLElement,
+): void {
+  if (useReducedMotion()) return;
+  const hook = hookMap[event.type];
+  if (hook) hook(target);
 }
