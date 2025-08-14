@@ -41,6 +41,32 @@ export type SessionState = {
   lobby: LobbyState;
 };
 
+export interface LobbyPeer {
+  id: string;
+  name: string;
+  emoji?: string;
+  isHost?: boolean;
+}
+
+export interface LobbyState {
+  pin?: string;
+  peers: Record<string, LobbyPeer>;
+}
+
+function getLocal(key: string): string | null {
+  return typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null;
+}
+
+export const sessionStore = {
+  state: {} as SessionState,
+  lobby: { peers: {} } as LobbyState,
+  tables: [] as { id: string; config: Record<string, unknown> }[],
+  profile: JSON.parse(getLocal('profile') || '{}') as {
+    name?: string;
+    avatar?: string;
+  },
+  resumeToken: getLocal('resumeToken') || undefined,
+
 type SignalingEvent =
   | { type: 'peer-joined'; peer: Peer }
   | { type: 'peer-left'; peerId: string }
@@ -92,6 +118,7 @@ class LocalBus implements Signaling {
   }
 }
 export const DevSignaling = new LocalBus();
+
 
 function genId(prefix = 'u'): string {
   return `${prefix}_${Math.random().toString(36).slice(2, 8)}`;
@@ -244,6 +271,27 @@ function broadcast(ev: SignalingEvent) {
   if (!st.lobby.pin) return;
   void sig.broadcast(st.lobby.pin, ev);
 }
+
+  clearTurnTimer() {
+    if (this.turnTimer) {
+      clearTimeout(this.turnTimer);
+      this.turnTimer = undefined;
+    }
+    this.turnDeadline = undefined;
+  },
+};
+
+export const session = {
+  getState: () => sessionStore,
+};
+
+export const sessionActions = {
+  joinLobby(pin: string, name: string, emoji: string) {
+    sessionStore.lobby.pin = pin;
+    const id = Math.random().toString(36).slice(2);
+    sessionStore.lobby.peers[id] = { id, name, emoji };
+  },
+};
 
 function handleSignal(ev: SignalingEvent) {
   const st = session.getState();

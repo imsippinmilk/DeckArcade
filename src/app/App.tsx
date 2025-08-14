@@ -3,7 +3,10 @@ import { ToastProvider } from './Toaster';
 
 import React, { useEffect, useState } from 'react';
 import { ToastProvider, useToast } from './Toaster';
+import { LobbyJoin } from './LobbyJoin';
+
 import { Header } from './Header';
+
 
 type Theme = 'light' | 'dark';
 
@@ -27,6 +30,9 @@ function AppContent() {
         >
           {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         </button>
+      </header>
+      <LobbyJoin />
+
       </Header>
       <main role="main">
         <div className="table" role="img" aria-label="Table preview" />
