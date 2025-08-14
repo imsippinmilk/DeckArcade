@@ -75,13 +75,15 @@ export const MsgSchema = z.discriminatedUnion('type', [
     type: z.literal('MUTE'),
     playerId: z.string(),
     muted: z.boolean(),
+    reason: z.string().optional(),
   }),
 
   // Communications
   z.object({
     type: z.literal('CHAT'),
-    playerId: z.string(),
+    playerId: z.string().optional(),
     message: z.string(),
+    ts: z.number().optional(),
   }),
 ]);
 

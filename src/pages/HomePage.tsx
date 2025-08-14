@@ -1,6 +1,7 @@
 import React from 'react';
 import { theme } from '../ui/theme';
 import Button from '../ui/Button';
+import TextChat from '../comms/TextChat';
 
 // A small catalogue preview for the home page. Only slugs are stored here;
 // details can be fetched from a proper catalogue service in the future.
@@ -17,8 +18,8 @@ const catalogPreview = {
     'euchre',
     'baccarat',
     'cribbage',
-    'rummy-500'
-  ]
+    'rummy-500',
+  ],
 };
 
 /**
@@ -35,7 +36,7 @@ const HomePage: React.FC = () => {
         backgroundColor: theme.colors.bg,
         color: theme.colors.text,
         minHeight: '100vh',
-        fontFamily: theme.typography.body
+        fontFamily: theme.typography.body,
       }}
     >
       <header
@@ -43,14 +44,14 @@ const HomePage: React.FC = () => {
           padding: theme.spaceScale[5],
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
         }}
       >
         <h1
           style={{
             margin: 0,
             fontFamily: theme.typography.display,
-            fontSize: '1.75rem'
+            fontSize: '1.75rem',
           }}
         >
           DeckArcade
@@ -58,13 +59,21 @@ const HomePage: React.FC = () => {
         <nav>
           <a
             href="/"
-            style={{ marginRight: theme.spaceScale[4], color: theme.colors.text, textDecoration: 'none' }}
+            style={{
+              marginRight: theme.spaceScale[4],
+              color: theme.colors.text,
+              textDecoration: 'none',
+            }}
           >
             Home
           </a>
           <a
             href="/games"
-            style={{ marginRight: theme.spaceScale[4], color: theme.colors.text, textDecoration: 'none' }}
+            style={{
+              marginRight: theme.spaceScale[4],
+              color: theme.colors.text,
+              textDecoration: 'none',
+            }}
           >
             Games
           </a>
@@ -80,14 +89,14 @@ const HomePage: React.FC = () => {
         <section
           style={{
             padding: theme.spaceScale[6],
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
           <h2
             style={{
               fontSize: '2.5rem',
               fontFamily: theme.typography.display,
-              marginBottom: theme.spaceScale[3]
+              marginBottom: theme.spaceScale[3],
             }}
           >
             Jump into fast, beautiful card games.
@@ -96,7 +105,7 @@ const HomePage: React.FC = () => {
             style={{
               fontSize: '1.25rem',
               color: theme.colors.muted,
-              marginBottom: theme.spaceScale[5]
+              marginBottom: theme.spaceScale[5],
             }}
           >
             Blackjack now. Poker, War & more next. Join by PIN or host locally.
@@ -106,7 +115,7 @@ const HomePage: React.FC = () => {
               display: 'flex',
               justifyContent: 'center',
               flexWrap: 'wrap',
-              gap: theme.spaceScale[3]
+              gap: theme.spaceScale[3],
             }}
           >
             <Button variant="primary">Host a Table</Button>
@@ -115,14 +124,14 @@ const HomePage: React.FC = () => {
         </section>
         <section
           style={{
-            padding: theme.spaceScale[6]
+            padding: theme.spaceScale[6],
           }}
         >
           <h3
             style={{
               fontSize: '1.5rem',
               fontFamily: theme.typography.display,
-              marginBottom: theme.spaceScale[4]
+              marginBottom: theme.spaceScale[4],
             }}
           >
             Featured Games
@@ -131,7 +140,7 @@ const HomePage: React.FC = () => {
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-              gap: theme.spaceScale[4]
+              gap: theme.spaceScale[4],
             }}
           >
             {catalogPreview.items.slice(0, 6).map((slug) => (
@@ -141,13 +150,14 @@ const HomePage: React.FC = () => {
                   backgroundColor: theme.colors.surface,
                   borderRadius: theme.radius.md,
                   boxShadow: theme.shadows.card,
-                  height: '200px'
+                  height: '200px',
                 }}
               />
             ))}
           </div>
         </section>
       </main>
+      <TextChat />
     </div>
   );
 };

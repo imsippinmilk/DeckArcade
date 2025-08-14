@@ -5,6 +5,7 @@ export interface SessionState {
   playerId?: string;
   seat?: number;
   muted?: boolean;
+  muteReason?: string;
   isPrivate?: boolean;
 }
 
@@ -44,6 +45,10 @@ export const sessionStore = {
     this.state.roomId = roomId;
     this.state.playerId = playerId;
     this.state.isPrivate = isPrivate;
+    this.state.muted = false;
+    this.state.muteReason = undefined;
+    const msg: Msg = { type: 'JOIN', roomId, playerId };
+
     const msg: Msg = {
       type: 'JOIN',
       roomId,
