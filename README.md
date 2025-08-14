@@ -43,8 +43,8 @@
 "src/games/blackjack/index.ts",
 "src/games/blackjack/ui.tsx",
 "src/games/blackjack/rules.ts",
-"src/games/hearts/index.ts  (to be added later)",
-"src/games/spades/index.ts  (to be added later)"
+"src/games/hearts/index.ts (to be added later)",
+"src/games/spades/index.ts (to be added later)"
 ]
 }
 },
@@ -313,7 +313,7 @@
 "minPlayers": 2,
 "maxPlayers": 9,
 "tags": \["strategy", "multiplayer", "table"],
-"status": "external-module"
+"status": "available"
 },
 {
 "slug": "war",
@@ -361,7 +361,7 @@
 ],
 "rulesSummary": "Two hole cards, five community cards; best 5-card hand wins.",
 "cta": { "label": "Open", "href": "/games/poker-holdem" },
-"status": "external-module"
+"status": "available"
 },
 {
 "slug": "war",
@@ -431,7 +431,7 @@
 "multiplayer": { "maxSeats": 7, "spectators": true, "sharedShoe": true },
 "animations": \["dealCard", "flipCard", "chipSlide", "chipStackBounce", "highlightPulse"]
 },
-"\_comment\_for\_future\_games": "Add each game's schema here (rules + explainers + animations). Host Panel auto-renders controls per schema."
+"\_comment_for_future_games": "Add each game's schema here (rules + explainers + animations). Host Panel auto-renders controls per schema."
 },
 "gameAPI": {
 "contract": {
@@ -529,9 +529,8 @@
 ]
 },
 "gameRegistry": {
-"available": \["blackjack"],
+"available": ["blackjack", "poker-holdem"],
 "externalModules": \[
-"poker-holdem",
 "war",
 "hearts",
 "spades",
