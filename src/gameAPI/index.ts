@@ -6,7 +6,7 @@
 export type GameRegistration = {
   slug: string;
   meta: Record<string, unknown>;
-  createInitialState: (seed: number) => unknown;
+  createInitialState: (seed?: number) => unknown;
   applyAction: (state: unknown, action: unknown) => unknown;
   getPlayerView: (state: unknown, playerId: string) => unknown;
   getNextActions: (state: unknown, playerId: string) => unknown;

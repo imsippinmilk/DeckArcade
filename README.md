@@ -43,8 +43,8 @@
 "src/games/blackjack/index.ts",
 "src/games/blackjack/ui.tsx",
 "src/games/blackjack/rules.ts",
-"src/games/hearts/index.ts  (to be added later)",
-"src/games/spades/index.ts  (to be added later)"
+"src/games/hearts/index.ts (to be added later)",
+"src/games/spades/index.ts (to be added later)"
 ]
 }
 },
@@ -431,11 +431,11 @@
 "multiplayer": { "maxSeats": 7, "spectators": true, "sharedShoe": true },
 "animations": \["dealCard", "flipCard", "chipSlide", "chipStackBounce", "highlightPulse"]
 },
-"\_comment\_for\_future\_games": "Add each game's schema here (rules + explainers + animations). Host Panel auto-renders controls per schema."
+"\_comment_for_future_games": "Add each game's schema here (rules + explainers + animations). Host Panel auto-renders controls per schema."
 },
 "gameAPI": {
 "contract": {
-"registerGame": "DeckArcade.register({ slug, meta, createInitialState(seed), applyAction(state, action), getPlayerView(state, playerId), getNextActions(state, playerId), rules: { validate(state, action) }, explainers: { getTips(state, playerId) }, animations: { hooks }, payouts: { settle(economyState, tableState) } })",
+"registerGame": "DeckArcade.register({ slug, meta, createInitialState(seed?), applyAction(state, action), getPlayerView(state, playerId), getNextActions(state, playerId), rules: { validate(state, action) }, explainers: { getTips(state, playerId) }, animations: { hooks }, payouts: { settle(economyState, tableState) } })",
 "events": \["onJoin", "onLeave", "onStart", "onPause", "onResume", "onEnd"],
 "networkModel": "deterministic actions + server-seeded RNG",
 "uiHooks": \["renderTable(stateView)", "renderHand(stateView)", "renderActions(nextActions)", "renderExplainers(tips)"],

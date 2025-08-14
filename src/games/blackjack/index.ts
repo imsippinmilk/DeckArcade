@@ -10,9 +10,9 @@ const blackjackGame: GameRegistration = {
   slug: 'blackjack',
   meta: {
     title: 'Blackjack',
-    players: '1–7'
+    players: '1–7',
   },
-  createInitialState(seed: number) {
+  createInitialState(seed?: number) {
     // TODO: generate a shuffled shoe and initial table state based on seed
     return { seed };
   },
@@ -32,21 +32,21 @@ const blackjackGame: GameRegistration = {
     validate(state: unknown, action: unknown) {
       // TODO: enforce blackjack move legality
       return true;
-    }
+    },
   },
   explainers: {
     getTips(state: unknown, playerId: string) {
       // TODO: return contextual hints such as when to hit or stand
       return [];
-    }
+    },
   },
   animations: {},
   payouts: {
     settle(economyState: unknown, tableState: unknown) {
       // TODO: move chips based on results of the hand
       return {};
-    }
-  }
+    },
+  },
 };
 
 // Register the game so that it can be discovered by the UI.
