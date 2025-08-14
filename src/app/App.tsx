@@ -1,7 +1,3 @@
-import React from 'react';
-export default function App() {
-  return <div />;
-
 import React, { useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';

@@ -48,7 +48,7 @@ export interface GameState {
   afterSplit?: boolean;
 }
 
-export type Action = 'hit' | 'stand' | 'split' | 'surrender';
+export type Action = 'hit' | 'stand' | 'split' | 'double' | 'surrender';
 
 function createDeck(): Card[] {
   const suits: Suit[] = ['C', 'D', 'H', 'S'];

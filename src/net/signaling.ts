@@ -91,7 +91,7 @@ export class SignalingClient {
         try {
           const m = parseMsg(ev.data as string);
           this.dispatch(m);
-          if (m.type === 'CREATE_ROOM') {
+          if (m.type === 'CREATE_ROOM' && m.roomId) {
             this.roomId = m.roomId;
             this.ws.removeEventListener('message', handler);
             resolve({ roomId: m.roomId, pin });
@@ -187,7 +187,8 @@ export async function connectToSignaling(
 ): Promise<SignalingClient> {
   const target =
     url ||
-    (typeof process !== 'undefined' && process.env.SIGNALING_URL) ||
+    (typeof globalThis !== 'undefined' &&
+      (globalThis as any).process?.env?.SIGNALING_URL) ||
     'ws://localhost:8787';
   const client = new SignalingClient(target);
   await client.connect();
