@@ -16,17 +16,11 @@ test.afterAll(async () => {
 test('rate limit only allows 8 messages', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
-  await page.evaluate(async () => {
-    while (!(window as any).__chatId) {
-      await new Promise((r) => setTimeout(r, 50));
-    }
-  });
-  await page.waitForTimeout(300);
+  await page.waitForFunction(() => (window as any).__chatId);
   for (let i = 0; i < 10; i++) {
     await page.fill('[data-testid="chat-input"]', `m${i}`);
     await page.click('[data-testid="chat-send"]');
   }
-  await page.waitForTimeout(500);
   await expect(page.locator('[data-testid="chat-msg"]')).toHaveCount(8);
 });
 
@@ -34,12 +28,9 @@ test('mute disables sending with reason', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
 
-  const pid: string = await page.evaluate(async () => {
-    while (!(window as any).__chatId) {
-      await new Promise((r) => setTimeout(r, 50));
-    }
-    return (window as any).__chatId as string;
-  });
+  const pid: string = await page
+    .waitForFunction(() => (window as any).__chatId)
+    .then((handle) => handle.jsonValue());
 
   const ws = new WebSocket('ws://localhost:8080');
   ws.on('message', (raw) => {
