@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import {
   BlackjackAction,
   BlackjackConfig,
@@ -8,6 +8,7 @@ import {
   getNextActions,
   cardToString,
 } from './rules';
+import { handleDomainEvent } from '../../gameAPI/animations';
 
 const defaultConfig: BlackjackConfig = {
   h17: false,
@@ -30,9 +31,15 @@ const BlackjackUI: React.FC = () => {
   const view = getPlayerView(state, 'player');
   const actions = getNextActions(state, 'player');
   const hand = view.hands[view.active]?.cards ?? [];
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!tableRef.current) return;
+    view.events.forEach((e: any) => handleDomainEvent(e, tableRef.current!));
+  }, [view.events]);
 
   return (
-    <div style={{ color: '#fff' }}>
+    <div ref={tableRef} style={{ color: '#fff' }}>
       <div>Dealer: {view.dealer.map(cardToString).join(' ')}</div>
       <div>Player: {hand.map(cardToString).join(' ')}</div>
       <div>
