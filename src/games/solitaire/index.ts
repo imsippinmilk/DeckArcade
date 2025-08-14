@@ -4,6 +4,7 @@ import {
   validateAction,
   applyAction,
   getHint,
+  getNextActions,
 } from './rules';
 
 registerGame({
@@ -12,10 +13,16 @@ registerGame({
   createInitialState,
   applyAction: (state, action) => applyAction(state as any, action as any),
   getPlayerView: (state) => state,
-  getNextActions: () => [],
+  getNextActions: (state) => getNextActions(state as any),
   rules: {
     validate: (state, action) => validateAction(state as any, action as any),
   },
 });
 
-export { createInitialState, validateAction, applyAction, getHint };
+export {
+  createInitialState,
+  validateAction,
+  applyAction,
+  getHint,
+  getNextActions,
+};

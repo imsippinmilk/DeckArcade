@@ -1,36 +1,3 @@
-export interface GameRegistration<State = any, Action = any> {
-  slug: string;
-  meta: Record<string, unknown>;
-  createInitialState: (...args: any[]) => State;
-  applyAction: (state: State, action: Action) => State;
-  getPlayerView: (state: State, playerId: string) => unknown;
-  getNextActions: (state: State, playerId: string) => Action[];
-  rules: {
-    validate: (state: State, action: Action, playerId?: string) => boolean;
-  };
-}
-
-const registry: Record<string, GameRegistration> = {};
-
-export function registerGame(game: GameRegistration): void {
-  registry[game.slug] = game;
-}
-
-export function getGame(slug: string): GameRegistration | undefined {
-  return registry[slug];
-}
-
-export type { GameRegistration as Game };
-
-export interface GameRegistration {
-  slug: string;
-  meta: Record<string, unknown>;
-  createInitialState: (...args: any[]) => unknown;
-  applyAction: (state: any, action: any) => any;
-  getPlayerView: (state: any, playerId?: string) => any;
-  getNextActions: (state: any, stage?: string) => string[];
-  rules: {
-    validate: (state: any, action: any) => boolean;
 export interface GameRegistration<
   State = any,
   Action = any,
@@ -56,3 +23,5 @@ export function registerGame(game: GameRegistration): void {
 export function getGame(slug: string): GameRegistration | undefined {
   return registry.get(slug);
 }
+
+export type Game = GameRegistration;
