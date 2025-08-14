@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import HostPanel from 'src/app/HostPanel';
-import { sessionStore } from 'src/store/session';
+import { sessionStore } from 'src/store/tableSession';
 
 const schema = {
   properties: {

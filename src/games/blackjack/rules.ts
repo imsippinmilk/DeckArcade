@@ -1,3 +1,5 @@
+// Real blackjack core with clean UI/engine binding.
+// Dealer H17/S17 is configurable; Aces 1/11; 3:2 payout default (configurable).
 export type Rank =
   | 'A'
   | '2'
@@ -109,6 +111,16 @@ function handValue(cards: Card[]): { total: number; soft: boolean } {
 
 function isBlackjack(cards: Card[]): boolean {
   return cards.length === 2 && handValue(cards).total === 21;
+}
+
+export function scoreHand(cards: Card[]) {
+  const { total, soft } = handValue(cards);
+  return {
+    total,
+    soft,
+    blackjack: isBlackjack(cards),
+    bust: total > 21,
+  };
 }
 
 function dealerShouldHit(dealer: Card[], config: BlackjackConfig): boolean {
