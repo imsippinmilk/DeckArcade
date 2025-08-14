@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ToastProvider, useToast } from './Toaster';
+import { Header } from './Header';
 
 type Theme = 'light' | 'dark';
 
@@ -37,7 +38,7 @@ function AppContent() {
 
   return (
     <div>
-      <header>
+      <Header>
         <button
           className="theme-toggle"
           onClick={toggleTheme}
@@ -46,7 +47,7 @@ function AppContent() {
         >
           {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         </button>
-      </header>
+      </Header>
       <main role="main">
         <h1>Deck Arcade</h1>
         <p>The current theme is {theme} mode.</p>
@@ -56,10 +57,70 @@ function AppContent() {
   );
 }
 
+import React from 'react';
+import '../styles/global.css';
+import { ThemeProvider } from './ThemeProvider';
+import { Header } from './Header';
+import { Router } from './router';
+import { Home } from './Home';
+import { Games } from './Games';
+import { Host } from './Host';
+
+
 export default function App() {
+  const routes = [
+    {
+      path: '/',
+      element: (
+        <>
+          <Header />
+          <Home />
+        </>
+      ),
+    },
+    {
+      path: '/games',
+      element: (
+        <>
+          <Header />
+          <Games />
+        </>
+      ),
+    },
+    {
+      path: '/quick',
+      element: (
+        <>
+          <Header />
+          <Games />
+        </>
+      ),
+    },
+    {
+      path: '/host',
+      element: (
+        <>
+          <Header />
+          <Host />
+        </>
+      ),
+    },
+    {
+      path: '/how',
+      element: (
+        <>
+          <Header />
+          <div className="container">
+            <h2>How It Works</h2>
+            <p>Join by PIN or host locally with WebRTC.</p>
+          </div>
+        </>
+      ),
+    },
+  ];
   return (
-    <ToastProvider>
-      <AppContent />
-    </ToastProvider>
+    <ThemeProvider>
+      <Router routes={routes} />
+    </ThemeProvider>
   );
 }
