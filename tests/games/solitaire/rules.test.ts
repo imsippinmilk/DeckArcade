@@ -6,7 +6,7 @@ import {
   getHint,
   Card,
   GameState,
-} from '../../../src/games/solitaire/rules';
+} from 'src/games/solitaire/rules';
 
 function makeCard(
   rank: number,
