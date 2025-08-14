@@ -1,53 +1,47 @@
-import { describe, it, expect } from 'vitest';
-import { createMoneyPool } from 'src/store/moneyPool';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { moneyPool, moneyActions } from 'src/store/moneyPool';
 
-describe('money pool ledger', () => {
-  it('rebuilds balances deterministically from ledger', () => {
-    const pool = createMoneyPool();
-    pool.buyIn('p1', 100);
-    pool.buyIn('p2', 100);
-    pool.recordBet('h1', 'p1', 50);
-    pool.recordBet('h1', 'p2', 50);
-    pool.settle('h1', [
-      { playerId: 'p1', result: 'win', amount: 50 },
-      { playerId: 'p2', result: 'lose', amount: 50 },
+describe('money pool', () => {
+  beforeEach(() => {
+    moneyActions.reset();
+    moneyPool.setState({ ledger: [] });
+  });
+
+  it('handles deposits, withdrawals, transfers, and payouts', () => {
+    moneyActions.deposit('p1', 500, 'start');
+    moneyActions.withdraw('p1', 200, 'cashout');
+    moneyActions.transferToPot('p1', 200, 'bet');
+    moneyActions.payout('p1', 150, 'win');
+
+    const s = moneyPool.getState();
+    expect(s.balances['p1']).toBe(250);
+    expect(s.potCents).toBe(50);
+    expect(s.ledger).toHaveLength(4);
+    expect(s.ledger.map((l) => l.type)).toEqual([
+      'deposit',
+      'withdraw',
+      'to-pot',
+      'payout',
     ]);
-
-    const rebuilt: Record<string, number> = {};
-    for (const entry of pool.ledger) {
-      rebuilt[entry.playerId] = (rebuilt[entry.playerId] ?? 0) + entry.delta;
-    }
-    expect(rebuilt).toEqual(pool.balances);
   });
 
-  it('conserves chips on settlement including rake', () => {
-    const pool = createMoneyPool();
-    pool.buyIn('p1', 100);
-    pool.buyIn('p2', 100);
-    pool.recordBet('h2', 'p1', 50);
-    pool.recordBet('h2', 'p2', 50);
-    pool.settle(
-      'h2',
-      [
-        { playerId: 'p1', result: 'win', amount: 50 },
-        { playerId: 'p2', result: 'lose', amount: 50 },
-      ],
-      { rake: { percent: 10 } },
-    );
+  it('settles multiple winners without overdrawing the pot', () => {
+    moneyActions.deposit('p1', 1000);
+    moneyActions.transferToPot('p1', 1000);
 
-    const handSum = pool.ledger
-      .filter((e: any) => e.handId === 'h2')
-      .reduce((acc: number, e: any) => acc + e.delta, 0);
-    expect(handSum + pool.rake).toBe(0);
+    moneyActions.settleWinners({ p1: 600, p2: 600 });
+    const s = moneyPool.getState();
+    expect(s.potCents).toBe(0);
+    expect(s.balances['p1']).toBe(600);
+    expect(s.balances['p2']).toBe(400);
   });
 
-  it('disallows negative balances unless loans are allowed', () => {
-    const pool = createMoneyPool();
-    pool.buyIn('p1', 50);
-    expect(() => pool.recordBet('h3', 'p1', 60)).toThrow();
-
-    const loanPool = createMoneyPool({ loansAllowed: true });
-    expect(() => loanPool.recordBet('h3', 'p1', 60)).not.toThrow();
-    expect(loanPool.balances['p1']).toBe(-60);
+  it('resets state and records a reset transaction', () => {
+    moneyActions.deposit('p1', 100);
+    moneyActions.reset();
+    const s = moneyPool.getState();
+    expect(s.potCents).toBe(0);
+    expect(s.balances).toEqual({});
+    expect(s.ledger[s.ledger.length - 1].type).toBe('reset');
   });
 });
