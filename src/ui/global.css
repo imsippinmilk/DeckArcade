@@ -1,0 +1,50 @@
+:root {
+  --color-bg: #0a0e10;
+  --color-surface: #121719;
+  --color-surface-alt: #0f1416;
+  --color-accent-primary: #17bebb;
+  --color-accent-secondary: #e94e77;
+  --color-accent-tertiary: #ffc145;
+  --color-text: #eef2f5;
+  --color-muted: #90a4ae;
+  --color-success: #3ddc84;
+  --color-warning: #ffb300;
+  --color-danger: #ff5a5a;
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --shadow-card: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.35);
+  --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Arial, sans-serif;
+  --layout-max-width: 82.5rem;
+  --layout-gutter: 1rem;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin-top: 0;
+}
+
+button {
+  font-family: var(--font-body);
+}
+
+@media (max-width: 40em) {
+  h1 {
+    font-size: 1.75rem;
+  }
+}

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Filter } from 'bad-words';
 import { Msg } from '../net/protocol';
 import { sessionStore } from '../store/session';
+import Button from '../ui/Button';
 
 const EMOTES: Record<string, string> = { ':smile:': '🙂' };
 const ROOM_ID = 'test-room';
@@ -99,7 +100,13 @@ const TextChat: React.FC = () => {
   };
 
   return (
-    <div style={{ borderTop: '1px solid #2a2f33', padding: '0.5rem' }}>
+    <div
+      style={{
+        borderTop: '1px solid var(--color-surface-alt)',
+        padding: '0.5rem',
+        background: 'var(--color-surface)',
+      }}
+    >
       <div
         ref={listRef}
         style={{
@@ -121,7 +128,7 @@ const TextChat: React.FC = () => {
       {mutedReason && (
         <div
           data-testid="chat-muted"
-          style={{ color: '#f66', marginBottom: '0.5rem' }}
+          style={{ color: 'var(--color-danger)', marginBottom: '0.5rem' }}
         >
           Muted: {mutedReason}
         </div>
@@ -132,16 +139,24 @@ const TextChat: React.FC = () => {
           type="text"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          style={{ flex: 1, marginRight: '0.5rem' }}
+          style={{
+            flex: 1,
+            marginRight: '0.5rem',
+            background: 'var(--color-surface-alt)',
+            color: 'var(--color-text)',
+            border: '1px solid var(--color-surface-alt)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '0.25rem 0.5rem',
+          }}
           disabled={!!mutedReason}
         />
-        <button
+        <Button
           data-testid="chat-send"
           onClick={sendMessage}
           disabled={!!mutedReason}
         >
           Send
-        </button>
+        </Button>
       </div>
     </div>
   );
