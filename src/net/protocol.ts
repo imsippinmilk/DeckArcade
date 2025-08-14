@@ -8,8 +8,12 @@ import xxhash, { XXHashAPI } from 'xxhash-wasm';
  */
 
 export const MsgSchema = z.discriminatedUnion('type', [
-  // Server assigns an id to the connected client
-  z.object({ type: z.literal('HELLO'), clientId: z.string() }),
+  // Initial handshake and resume support
+  z.object({
+    type: z.literal('HELLO'),
+    clientId: z.string().optional(),
+    resumeToken: z.string().optional(),
+  }),
 
   // Room management
   z.object({
@@ -23,6 +27,9 @@ export const MsgSchema = z.discriminatedUnion('type', [
     roomId: z.string(),
     pin: z.string().optional(),
     playerId: z.string().optional(),
+    profile: z
+      .object({ name: z.string(), avatar: z.string().optional() })
+      .optional(),
   }),
   z.object({
     type: z.literal('LEAVE'),
@@ -58,6 +65,9 @@ export const MsgSchema = z.discriminatedUnion('type', [
     state: z.any(),
     checksum: z.string(),
   }),
+
+  // Resume support
+  z.object({ type: z.literal('RESUME_TOKEN'), resumeToken: z.string() }),
 
   // Moderation
   z.object({ type: z.literal('KICK'), playerId: z.string() }),

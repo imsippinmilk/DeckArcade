@@ -8,15 +8,50 @@ export interface SessionState {
   isPrivate?: boolean;
 }
 
+function getLocal(key: string): string | null {
+  return typeof localStorage !== 'undefined' ? localStorage.getItem(key) : null;
+}
+
 export const sessionStore = {
   state: {} as SessionState,
   tables: [] as { id: string; config: Record<string, unknown> }[],
+  profile: JSON.parse(getLocal('profile') || '{}') as {
+    name?: string;
+    avatar?: string;
+  },
+  resumeToken: getLocal('resumeToken') || undefined,
+
+  setProfile(profile: { name: string; avatar?: string }) {
+    this.profile = profile;
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('profile', JSON.stringify(profile));
+    }
+  },
+
+  handleResumeToken(token: string) {
+    this.resumeToken = token;
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('resumeToken', token);
+    }
+  },
+
+  resume(): string | null {
+    if (!this.resumeToken) return null;
+    return encodeMsg({ type: 'HELLO', resumeToken: this.resumeToken });
+  },
 
   join(roomId: string, playerId: string, isPrivate = false): string {
     this.state.roomId = roomId;
     this.state.playerId = playerId;
     this.state.isPrivate = isPrivate;
-    const msg: Msg = { type: 'JOIN', roomId, playerId };
+    const msg: Msg = {
+      type: 'JOIN',
+      roomId,
+      playerId,
+      profile: this.profile.name
+        ? (this.profile as { name: string; avatar?: string })
+        : undefined,
+    };
     return encodeMsg(msg);
   },
 
