@@ -2,7 +2,11 @@ import { z } from 'zod';
 import xxhash from 'xxhash-wasm';
 
 export const MsgSchema = z.discriminatedUnion('type', [
-  z.object({ type: z.literal('HELLO'), clientId: z.string() }),
+  z.object({
+    type: z.literal('HELLO'),
+    clientId: z.string().optional(),
+    resumeToken: z.string().optional(),
+  }),
   z.object({
     type: z.literal('CREATE_ROOM'),
     roomId: z.string().optional(),
@@ -14,6 +18,9 @@ export const MsgSchema = z.discriminatedUnion('type', [
     roomId: z.string(),
     pin: z.string().optional(),
     playerId: z.string().optional(),
+    profile: z
+      .object({ name: z.string(), avatar: z.string().optional() })
+      .optional(),
   }),
   z.object({
     type: z.literal('LEAVE'),
@@ -43,6 +50,7 @@ export const MsgSchema = z.discriminatedUnion('type', [
     state: z.any(),
     checksum: z.string(),
   }),
+  z.object({ type: z.literal('RESUME_TOKEN'), resumeToken: z.string() }),
   z.object({ type: z.literal('KICK'), playerId: z.string() }),
   z.object({
     type: z.literal('MUTE'),
