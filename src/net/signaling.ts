@@ -8,7 +8,7 @@ import { encodeMsg, parseMsg, Msg } from './protocol';
  * `src/net/protocol.ts`.
  */
 export class SignalingClient {
-  private ws: WebSocket;
+  private ws!: WebSocket;
   /** identifier assigned by the signalling server after the HELLO handshake */
   public clientId?: string;
   /** room the client is currently joined to */
@@ -16,40 +16,70 @@ export class SignalingClient {
 
   private listeners: Set<(msg: Msg) => void> = new Set();
 
-  constructor(private url: string) {
-    // Lazily constructed – `connect()` must be called to actually open the
-    // socket.  This allows tests to control when the connection is made.
-    this.ws = new WebSocket(url);
+  // resume token issued by the server after joining a room
+  private resumeToken?: string;
+  // flag used to avoid auto reconnect when the consumer explicitly closes
+  private manualClose = false;
+
+  constructor(private url: string) {}
+
+  /** initialise listeners on a websocket instance */
+  private setupSocket(ws: WebSocket): void {
+    ws.addEventListener('message', this.handleMessage);
+    ws.addEventListener('close', this.handleClose);
+  }
+
+  private handleMessage = (ev: MessageEvent) => {
+    const msg = parseMsg(ev.data as string);
+    if (msg.type === 'HELLO' && msg.clientId) this.clientId = msg.clientId;
+    if (msg.type === 'RESUME_TOKEN') this.resumeToken = msg.resumeToken;
+    this.dispatch(msg);
+  };
+
+  private handleClose = () => {
+    if (this.manualClose || !this.resumeToken) return;
+    // attempt to reconnect shortly after a disconnect
+    setTimeout(() => this.attemptReconnect(), 50);
+  };
+
+  private attemptReconnect() {
+    if (!this.resumeToken) return;
+    this.ws = new WebSocket(this.url);
+    this.manualClose = false;
+    this.setupSocket(this.ws);
+    this.ws.addEventListener(
+      'open',
+      () => {
+        this.ws.send(encodeMsg({ type: 'HELLO', resumeToken: this.resumeToken }));
+      },
+      { once: true },
+    );
   }
 
   /**
    * Returns a promise that resolves once the initial HELLO message is
    * received from the server.  The server assigns the `clientId` which is
    * stored for later messages.
-   */
+  */
   async connect(): Promise<void> {
+    this.ws = new WebSocket(this.url);
+    this.setupSocket(this.ws);
     return new Promise((resolve, reject) => {
-      this.ws.addEventListener('error', (e) => reject(e));
-      this.ws.addEventListener(
-        'message',
-        (ev) => {
-          try {
-            const msg = parseMsg(ev.data as string);
-            if (msg.type === 'HELLO' && msg.clientId) {
-              this.clientId = msg.clientId;
-              this.dispatch(msg);
-              resolve();
-            } else {
-              // If the first message is not HELLO just dispatch it – it might be
-              // from a reconnection scenario.  Do not resolve the promise yet.
-              this.dispatch(msg);
-            }
-          } catch (err) {
-            reject(err);
+      const onHello = (ev: MessageEvent) => {
+        try {
+          const msg = parseMsg(ev.data as string);
+          if (msg.type === 'HELLO' && msg.clientId) {
+            this.clientId = msg.clientId;
+            this.ws.removeEventListener('message', onHello);
+            resolve();
           }
-        },
-        { once: true },
-      );
+        } catch (err) {
+          this.ws.removeEventListener('message', onHello);
+          reject(err);
+        }
+      };
+      this.ws.addEventListener('message', onHello);
+      this.ws.addEventListener('error', (e) => reject(e), { once: true });
     });
   }
 
@@ -165,6 +195,7 @@ export class SignalingClient {
 
   /** Close the underlying websocket connection. */
   close() {
+    this.manualClose = true;
     this.ws.close();
   }
 }
