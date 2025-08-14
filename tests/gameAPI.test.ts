@@ -7,8 +7,8 @@ describe('game registry', () => {
       slug: 'test-game',
       meta: {},
       createInitialState: (_seed?: number) => ({}),
-      applyAction: (state) => state,
-      getPlayerView: (state) => state,
+      applyAction: (state: any) => state,
+      getPlayerView: (state: any) => state,
       getNextActions: () => [],
       rules: { validate: () => true },
     };
@@ -21,8 +21,8 @@ describe('game registry', () => {
       slug: 'shared-slug',
       meta: { version: 1 },
       createInitialState: (_seed?: number) => ({}),
-      applyAction: (state) => state,
-      getPlayerView: (state) => state,
+      applyAction: (state: any) => state,
+      getPlayerView: (state: any) => state,
       getNextActions: () => [],
       rules: { validate: () => true },
     };
