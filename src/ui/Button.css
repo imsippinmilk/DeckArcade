@@ -1,0 +1,35 @@
+.da-button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  color: var(--color-bg);
+}
+
+.da-button--primary {
+  background: var(--color-accent-primary);
+}
+
+.da-button--primary:hover {
+  background: var(--color-accent-secondary);
+}
+
+.da-button--secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.da-button--secondary:hover {
+  background: var(--color-surface-alt);
+}
+
+.da-button:active {
+  transform: scale(0.97);
+}
+
+.da-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
