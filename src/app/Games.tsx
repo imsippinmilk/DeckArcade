@@ -25,10 +25,10 @@ export const Games: React.FC = () => {
       <h2>Games</h2>
       <div style={{ display: 'grid', gap: '1rem' }}>
         {list.map((g) => {
-          const UI = uiMap[g.slug];
+          const UI = uiMap[g.id];
           return (
-            <div key={g.slug} className="card" style={{ padding: '1rem' }}>
-              <h3 style={{ marginTop: 0 }}>{g.meta.name || g.slug}</h3>
+            <div key={g.id} className="card" style={{ padding: '1rem' }}>
+              <h3 style={{ marginTop: 0 }}>{g.name}</h3>
               {UI ? <UI /> : <p>Coming soon</p>}
             </div>
           );
@@ -37,19 +37,3 @@ export const Games: React.FC = () => {
     </main>
   );
 };
-
-
-export function Games() {
-  const games = ['blackjack', 'poker-holdem', 'solitaire', 'sueca', 'war'];
-  return (
-    <div className="container">
-      <h2>Games</h2>
-      <ul>
-        {games.map((g) => (
-          <li key={g}>{g}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-

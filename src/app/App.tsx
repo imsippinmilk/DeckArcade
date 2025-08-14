@@ -1,52 +1,15 @@
 import React from 'react';
-import { ToastProvider } from './Toaster';
-
-import React, { useEffect, useState } from 'react';
-import { ToastProvider, useToast } from './Toaster';
-import { Header } from './Header';
-
-type Theme = 'light' | 'dark';
-
-function applyTheme(theme: Theme) {
-  document.body.classList.remove('light', 'dark');
-  document.body.classList.add(theme);
-}
-
-function AppContent() {
-  return (
-    <div>
-      <header>
-        <h1>Deck Arcade</h1>
-      </header>
-      <Header>
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label="Toggle color theme"
-          aria-pressed={theme === 'dark'}
-        >
-          {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-        </button>
-      </Header>
-      <main role="main">
-        <div className="table" role="img" aria-label="Table preview" />
-      </main>
-    </div>
-  );
-}
-
-import React from 'react';
 import '../styles/global.css';
 import { ThemeProvider } from './ThemeProvider';
+import { ToastProvider } from './Toaster';
 import { Header } from './Header';
-import { Router } from './router';
+import { Router, RouteEntry } from './router';
 import { Home } from './Home';
 import { Games } from './Games';
 import { Host } from './Host';
 
-
 export default function App() {
-  const routes = [
+  const routes: RouteEntry[] = [
     {
       path: '/',
       element: (
@@ -96,9 +59,12 @@ export default function App() {
       ),
     },
   ];
+
   return (
-    <ThemeProvider>
-      <Router routes={routes} />
-    </ThemeProvider>
+    <ToastProvider>
+      <ThemeProvider>
+        <Router routes={routes} />
+      </ThemeProvider>
+    </ToastProvider>
   );
 }

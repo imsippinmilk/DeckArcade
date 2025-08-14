@@ -1,36 +1,32 @@
 import React, { useEffect } from 'react';
 
-export const Modal: React.FC<{
+interface ModalProps {
   open: boolean;
   onClose: () => void;
   title?: string;
   children?: React.ReactNode;
-}> = ({ open, onClose, title, children }) => {
+}
+
+export const Modal: React.FC<ModalProps> = ({
+  open,
+  onClose,
+  title,
+  children,
+}) => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     if (open) document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-
-import React from 'react';
-
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}
-
-export function Modal({ open, onClose, title, children }: ModalProps) {
   if (!open) return null;
+
   return (
     <div
       role="dialog"
       aria-modal="true"
-      className="modal-root"
-
       aria-label={title}
+      className="modal-root"
       onClick={onClose}
       style={{
         position: 'fixed',
@@ -59,25 +55,3 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     </div>
   );
 };
-
-        background: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'var(--background-color)',
-          padding: '1rem',
-          borderRadius: 4,
-          minWidth: '300px',
-        }}
-      >
-        <h3>{title}</h3>
-        {children}
-      </div>
-    </div>
-  );
-}
