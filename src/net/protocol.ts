@@ -45,6 +45,11 @@ export const MsgSchema = z.discriminatedUnion('type', [
     ready: z.boolean(),
   }),
 
+  // Host control messages
+  z.object({ type: z.literal('PAUSE'), roomId: z.string().optional() }),
+  z.object({ type: z.literal('RESUME'), roomId: z.string().optional() }),
+  z.object({ type: z.literal('END_GAME'), roomId: z.string().optional() }),
+
   // Intent messages are sent in lockstep with a sequence number
   z.object({
     type: z.literal('INTENT'),

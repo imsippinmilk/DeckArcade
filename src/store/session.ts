@@ -7,6 +7,12 @@ export interface SessionState {
   muted?: boolean;
   muteReason?: string;
   isPrivate?: boolean;
+  /** Whether the local player has marked themselves ready */
+  ready?: boolean;
+  /** True if the player joined as a spectator */
+  isSpectator?: boolean;
+  /** Set when the host has paused the table */
+  paused?: boolean;
 }
 
 function getLocal(key: string): string | null {
@@ -41,12 +47,18 @@ export const sessionStore = {
     return encodeMsg({ type: 'HELLO', resumeToken: this.resumeToken });
   },
 
-  join(roomId: string, playerId: string, isPrivate = false): string {
+  join(
+    roomId: string,
+    playerId: string,
+    isPrivate = false,
+    isSpectator = false,
+  ): string {
     this.state.roomId = roomId;
     this.state.playerId = playerId;
     this.state.isPrivate = isPrivate;
     this.state.muted = false;
     this.state.muteReason = undefined;
+    this.state.isSpectator = isSpectator;
     const msg: Msg = {
       type: 'JOIN',
       roomId,
@@ -77,5 +89,66 @@ export const sessionStore = {
     };
     this.tables.push(table);
     return table;
+  },
+
+  /**
+   * Toggle the local ready state and produce a READY message for broadcast.
+   * The caller is responsible for sending the returned payload over the wire.
+   */
+  ready(ready = true): string | null {
+    if (!this.state.playerId) return null;
+    this.state.ready = ready;
+    const msg: Msg = { type: 'READY', playerId: this.state.playerId, ready };
+    return encodeMsg(msg);
+  },
+
+  /** mark the local client as a spectator */
+  setSpectator(isSpectator: boolean) {
+    this.state.isSpectator = isSpectator;
+  },
+
+  /**
+   * Host controls -----------------------------------------------------------
+   */
+
+  pause(): string | null {
+    if (!this.state.roomId) return null;
+    this.state.paused = true;
+    return encodeMsg({ type: 'PAUSE', roomId: this.state.roomId });
+  },
+
+  resumeGame(): string | null {
+    if (!this.state.roomId) return null;
+    this.state.paused = false;
+    return encodeMsg({ type: 'RESUME', roomId: this.state.roomId });
+  },
+
+  endGame(): string | null {
+    if (!this.state.roomId) return null;
+    return encodeMsg({ type: 'END_GAME', roomId: this.state.roomId });
+  },
+
+  /**
+   * Basic per-turn timer. Starts a timeout and invokes the callback when the
+   * deadline is reached. The deadline timestamp is stored for UI countdowns.
+   */
+  turnTimer: undefined as ReturnType<typeof setTimeout> | undefined,
+  turnDeadline: undefined as number | undefined,
+  startTurnTimer(seconds: number, onTimeout: () => void) {
+    this.clearTurnTimer();
+    this.turnDeadline = Date.now() + seconds * 1000;
+    this.turnTimer = setTimeout(() => {
+      this.turnTimer = undefined;
+      this.turnDeadline = undefined;
+      onTimeout();
+    }, seconds * 1000);
+  },
+
+  clearTurnTimer() {
+    if (this.turnTimer) {
+      clearTimeout(this.turnTimer);
+      this.turnTimer = undefined;
+    }
+    this.turnDeadline = undefined;
   },
 };
